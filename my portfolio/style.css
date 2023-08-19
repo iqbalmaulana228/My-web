@@ -44,12 +44,23 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+li:hover {
+    background-color: rgb(255, 252, 73);
+}
+li:active {
+    background-color: #9fa39e;
+    border-radius: 5px;
+    font-size: smaller;
 
+}
+ul{
+    margin-left: 20px;
+}
 
 li{
     margin-top: 9px;
-    margin-left: 70px;
     display: inline-block;
+    margin-left: 70px;
     font-size: 25px; 
     font-weight: bold;
     color: black;

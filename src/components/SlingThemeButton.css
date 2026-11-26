@@ -43,3 +43,10 @@
 @media (prefers-reduced-motion: reduce) {
   .theme-switcher-hint { transition: none; }
 }
+
+body[data-portfolio-side='dark-side'] .theme-switcher-hint {
+  border-color: #275342;
+  background: #0c131d;
+  color: #55f5a7;
+  box-shadow: 0 5px 20px #0008;
+}

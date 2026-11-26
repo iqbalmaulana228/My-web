@@ -55,7 +55,7 @@ function goTo(id) {
   document.getElementById('ds-' + id)?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function CodeWindow({typed}) {
+function CodeWindow({typing}) {
   const lines = [
     <><span className="ds-purple">export const</span> <span className="ds-cyan">developer</span> = {'{'}</>,
     <><span className="ds-key">  name:</span> <span className="ds-string">'Muhammad Iqbal Maulana'</span>,</>,
@@ -79,33 +79,45 @@ function CodeWindow({typed}) {
           <span className="ds-line-number">{String(i+1).padStart(2,'0')}</span><code>{line}</code>
         </div>)}
       </div>
-      <div className="ds-code-terminal"><b>iqbal@github:~$</b><span>{typed}</span><i className="ds-caret"/></div>
+      <div className="ds-code-terminal"><b>iqbal@github:~$</b><span>{typing.area === 'code' ? typing.text : ''}</span>{typing.area === 'code' && typing.text && <i className="ds-caret"/>}</div>
     </div>
   );
 }
 
 export default function DarkSidePortfolio() {
-  const [typed,setTyped]=useState('');
+  const [typing,setTyping]=useState({area:'',text:''});
   const [indexing,setIndexing]=useState(true);
   const [stackGroup,setStackGroup]=useState('languages');
   const [selected,setSelected]=useState(null);
   const [output,setOutput]=useState('Type /help and press Enter to inspect available commands.');
 
   useEffect(()=>{
-    const phrases=["const mindset = 'Build. Learn. Iterate.';","while (curious) { buildSomething(); }","git push origin main"];
-    let phrase=0,pos=0,deleting=false,timer;
+    const sequence=[
+      {area:'hero',text:'I build tools that solve real problems.'},
+      {area:'code',text:'git status --short'},
+      {area:'journey',text:'build -> test -> iterate'}
+    ];
+    let active=0,position=0,deleting=false,timer;
     const tick=()=>{
-      const current=phrases[phrase];
+      const current=sequence[active];
       if(!deleting){
-        pos=Math.min(pos+1,current.length);setTyped(current.slice(0,pos));
-        if(pos===current.length){deleting=true;timer=setTimeout(tick,1250);return;}
-      }else{
-        pos=Math.max(0,pos-1);setTyped(current.slice(0,pos));
-        if(pos===0){deleting=false;phrase=(phrase+1)%phrases.length;timer=setTimeout(tick,260);return;}
+        position=Math.min(position+1,current.text.length);
+        setTyping({area:current.area,text:current.text.slice(0,position)});
+        if(position===current.text.length){deleting=true;timer=setTimeout(tick,1900);return;}
+        timer=setTimeout(tick,78);
+        return;
       }
-      timer=setTimeout(tick,deleting?27:48);
+      position=Math.max(0,position-1);
+      setTyping({area:current.area,text:current.text.slice(0,position)});
+      if(position===0){
+        deleting=false;
+        active=(active+1)%sequence.length;
+        timer=setTimeout(tick,1050);
+        return;
+      }
+      timer=setTimeout(tick,38);
     };
-    tick();
+    timer=setTimeout(tick,700);
     return ()=>clearTimeout(timer);
   },[]);
 
@@ -147,7 +159,7 @@ export default function DarkSidePortfolio() {
           </div>
           <div className="ds-sidebar-label">FILE TREE <span>~/portfolio</span></div>
           <Suspense fallback={<div className="ds-loading">Loading navigation...</div>}>
-            <BranchedMenu items={menu} defaultOpen={0} color="#b8c5d5" accentColor="#55f5a7" lineColor="#24374a" width={230} rowHeight={35} indent={45} fontSize={12} className="ds-branched-menu" onSelect={chooseMenu}/>
+            <BranchedMenu items={menu} defaultOpen={0} color="#b8c5d5" accentColor="#86c9fc" lineColor="#24374a" width={230} rowHeight={35} indent={45} fontSize={12} className="ds-branched-menu" onSelect={chooseMenu}/>
           </Suspense>
           <div className="ds-sidebar-card"><small>CURRENT STATE</small><b>Always learning.</b><span>Shipping practical digital tools.</span><div className="ds-side-progress"><i/></div><small>BUILD / TEST / ITERATE</small></div>
           <a className="ds-back-link" href={LINKEDIN} target="_blank" rel="noreferrer">PROFESSIONAL PROFILE ↗</a>
@@ -160,20 +172,20 @@ export default function DarkSidePortfolio() {
               <h1>HELLO,<br/><span>WORLD_</span></h1>
               <div className="ds-role">MUHAMMAD IQBAL MAULANA</div>
               <p className="ds-description">Informatics Engineering student exploring software development, web applications, automation, OCR, and AI-assisted workflows. I build practical tools to turn everyday problems into usable software.</p>
-              <div className="ds-type-line"><b>~/</b><span>{typed}</span><i className="ds-caret"/></div>
+              <div className="ds-type-line"><b>~/</b><span>{typing.area === 'hero' ? typing.text : ''}</span>{typing.area === 'hero' && typing.text && <i className="ds-caret"/>}</div>
               <div className="ds-actions">
                 <button onClick={()=>goTo('projects')} className="ds-primary">EXPLORE REPOSITORIES <b>↘</b></button>
                 <a href={GITHUB} target="_blank" rel="noreferrer" className="ds-secondary">GITHUB PROFILE ↗</a>
               </div>
               <div className="ds-thought">
                 <Suspense fallback={<span className="ds-loading">INDEXING PROFILE DATA...</span>}>
-                  <ThoughtLine label="INDEXING LOCAL PROFILE DATA" doneLabel="PROFILE SNAPSHOT READY" glyph="dot" steps={['Profile README mapped','Selected repositories indexed','Technology stack categorized']} working={indexing} collapseOnSettle={false} showTimer={false} color="#9aaebe" glyphColor="#55f5a7" fontSize={11} shimmer settleDuration={420} className="ds-thought-line"/>
+                  <ThoughtLine label="INDEXING LOCAL PROFILE DATA" doneLabel="PROFILE SNAPSHOT READY" glyph="dot" steps={['Profile README mapped','Selected repositories indexed','Technology stack categorized']} working={indexing} collapseOnSettle={false} showTimer={false} color="#9aaebe" glyphColor="#86c9fc" fontSize={11} shimmer settleDuration={420} className="ds-thought-line"/>
                 </Suspense>
               </div>
             </div>
             <div className="ds-hero-visual">
               <div className="ds-pixel-orbit"><i/><i/><i/></div><div className="ds-code-tag">PROFILE OBJECT // TS</div>
-              <CodeWindow typed={typed}/>
+              <CodeWindow typing={typing}/>
               <div className="ds-sticker"><b>01</b><span>BUILD<br/>MODE</span><i>ON</i></div>
             </div>
           </section>
@@ -182,7 +194,7 @@ export default function DarkSidePortfolio() {
             <div className="ds-section-heading"><div><small>02 / STACK.JSON</small><h2>TOOLS OF THE TRADE<span>_</span></h2></div><p>Technologies and platforms listed in my GitHub profile README.</p></div>
             <div className="ds-stack-controls"><span>SELECT NODE</span>
               <Suspense fallback={<div className="ds-loading">Loading selector...</div>}>
-                <RubberSegment items={[{value:'languages',label:'LANGUAGES'},{value:'web',label:'WEB'},{value:'tooling',label:'TOOLING'}]} value={stackGroup} onChange={setStackGroup} trackColor="#101a25" thumbColor="#55f5a7" textColor="#8ca0b2" activeTextColor="#08130e" size="sm" radius={5} stretch={115} squash={4} className="ds-rubber-segment" aria-label="Technology categories"/>
+                <RubberSegment items={[{value:'languages',label:'LANGUAGES'},{value:'web',label:'WEB'},{value:'tooling',label:'TOOLING'}]} value={stackGroup} onChange={setStackGroup} trackColor="#101a25" thumbColor="#86c9fc" textColor="#8ca0b2" activeTextColor="#0a1534" size="sm" radius={5} stretch={115} squash={4} className="ds-rubber-segment" aria-label="Technology categories"/>
               </Suspense>
             </div>
             <div className="ds-tech-grid" key={stackGroup}>
@@ -197,7 +209,7 @@ export default function DarkSidePortfolio() {
               {projects.map((project,i)=><article className="ds-project-card" key={project.id} style={{'--project-index':i}}>
                 <div className="ds-project-top"><span>{project.kind}</span><b>{String(i+1).padStart(2,'0')}</b></div>
                 <Suspense fallback={<div className="ds-loading">Opening repository folder...</div>}>
-                  <FolderFloat items={folderActions} label={project.name} sublabel={project.stack.slice(0,2).join(' / ')} trigger="click" closeOnSelect physics={false} folderColor="#14283a" frontColor="#18374a" paperColor="#55f5a7" itemColor="#d8ffed" itemTextColor="#082217" labelColor="#e8fff4" width={188} height={110} spread={105} lift={22} tilt={5} stagger={50} className="ds-folder-float" onSelect={value=>{if(value==='source')window.open(project.url,'_blank','noopener,noreferrer');else setSelected(project);}}/>
+                  <FolderFloat items={folderActions} label={project.name} sublabel={project.stack.slice(0,2).join(' / ')} trigger="click" closeOnSelect physics={false} folderColor="#14283a" frontColor="#18374a" paperColor="#86c9fc" itemColor="#e1ecff" itemTextColor="#0a142c" labelColor="#e8f1ff" width={188} height={110} spread={105} lift={22} tilt={5} stagger={50} className="ds-folder-float" onSelect={value=>{if(value==='source')window.open(project.url,'_blank','noopener,noreferrer');else setSelected(project);}}/>
                 </Suspense>
                 <p className="ds-project-summary">{project.summary}</p>
                 <div className="ds-project-stack">{project.stack.slice(0,3).map(tag=><span key={tag}>{tag}</span>)}</div>
@@ -214,6 +226,7 @@ export default function DarkSidePortfolio() {
               <article><small>TRACK_02</small><h3>AUTOMATION</h3><p>Reducing manual work through document processing, OCR, data transformation, and workflow automation.</p><code>ocr / extraction / workflow</code></article>
               <article><small>TRACK_03</small><h3>AI EXPERIMENTS</h3><p>Exploring AI-assisted media workflows, transcript processing, computer vision, and useful integrations.</p><code>gemini / opencv / ai tools</code></article>
             </div>
+            <div className="ds-build-prompt"><b>~/build.log $</b><span>{typing.area === 'journey' ? typing.text : ''}</span>{typing.area === 'journey' && typing.text && <i className="ds-caret"/>}</div>
             <div className="ds-principle"><b>{'<>'}</b><div><strong>BUILD • LEARN • ITERATE</strong><p>Start with a problem. Build a working version. Test it. Improve the next one.</p></div><small>EOF</small></div>
           </section>
 
@@ -226,7 +239,7 @@ export default function DarkSidePortfolio() {
             <div className="ds-terminal">
               <div className="ds-terminal-heading"><span>TERMINAL / COMMAND PALETTE</span><b>● ONLINE</b></div>
               <Suspense fallback={<div className="ds-loading">Loading command prompt...</div>}>
-                <PromptBar placeholder="Try /projects, /stack, /github..." commands={commands} sources={[]} models={[]} efforts={[]} onSend={runCommand} background="#08111a" color="#d8ffeb" menuBackground="#132333" sparkColor="#55f5a7" width={720} radius={7} maxRows={3} className="ds-prompt-bar"/>
+                <PromptBar placeholder="Try /projects, /stack, /github..." commands={commands} sources={[]} models={[]} efforts={[]} onSend={runCommand} background="#08111a" color="#dceaff" menuBackground="#16213e" sparkColor="#86c9fc" width={720} radius={7} maxRows={3} className="ds-prompt-bar"/>
               </Suspense>
               <div className="ds-command-output"><b>↳</b> {output}</div>
             </div>

@@ -398,7 +398,7 @@ function Experience() {
   );
 }
 
-function Skills() {
+function Skills({ isDark }) {
   const [focused, setFocused] = useState(2);
   const focus = focusOptions[focused] || focusOptions[0];
   return (
@@ -417,7 +417,7 @@ function Skills() {
             <p className="wheel-intro">Putar pilihan untuk melihat konteks kemampuan yang digunakan dalam pekerjaan dan proses belajar.</p>
             <div className="option-wheel-stage">
               <Deferred minHeight={340}><Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 340 }} />}>
-                <OptionWheel items={focusOptions.map(item => item.label)} defaultSelected={2} onChange={index => setFocused(index)} textColor="#94a3b8" activeColor="#140a9a" side="left" fontSize={1.24} spacing={1.65} curve={1.12} tilt={9} blur={1.2} fade={0.3} minOpacity={0.1} smoothing={190} inset={22} loop draggable className="portfolio-option-wheel" />
+                <OptionWheel items={focusOptions.map(item => item.label)} defaultSelected={2} onChange={index => setFocused(index)} textColor={isDark ? '#aab8d0' : '#94a3b8'} activeColor={isDark ? '#b8b2ff' : '#140a9a'} side="left" fontSize={1.24} spacing={1.65} curve={1.12} tilt={9} blur={1.2} fade={0.3} minOpacity={0.1} smoothing={190} inset={22} loop draggable className="portfolio-option-wheel" />
               </Suspense></Deferred>
             </div>
             <div className="focus-detail" aria-live="polite"><span>SELECTED FOCUS</span><strong>{focus.label}</strong><p>{focus.detail}</p></div>
@@ -726,7 +726,7 @@ export default function App() {
         <QuickFacts />
         <About />
         <Experience />
-        <Skills />
+        <Skills isDark={isDark} />
         <WorkFiles />
         <Education />
         <ExploreMenu isDark={isDark} />

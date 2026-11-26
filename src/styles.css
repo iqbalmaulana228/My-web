@@ -1294,3 +1294,16 @@ html[data-theme='dark'] .sling-theme-tether circle { stroke: #a6a1ff; }
   }
   .sling-theme-button::before, .sling-theme-button::after { animation: none; }
 }
+
+
+html[data-theme='dark'] .button-quiet {
+  color: #d0d1ff;
+  border-color: #34445d;
+  background: #162238;
+}
+html[data-theme='dark'] .button-quiet:hover {
+  color: #ffffff;
+  border-color: #7771da;
+  background: #202b45;
+}
+.sling-theme-button[data-pulling='true'] { transition: none; }

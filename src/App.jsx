@@ -122,29 +122,19 @@ function Icon({ name, size = 18 }) {
 function Deferred({ children, className = '', minHeight = 320 }) {
   const host = useRef(null);
   const [ready, setReady] = useState(false);
-
   useEffect(() => {
     const node = host.current;
     if (!node) return undefined;
-    if (!('IntersectionObserver' in window)) {
-      setReady(true);
-      return undefined;
-    }
+    if (!('IntersectionObserver' in window)) { setReady(true); return undefined; }
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setReady(true);
-        observer.disconnect();
-      }
+      if (entry.isIntersecting) { setReady(true); observer.disconnect(); }
     }, { rootMargin: '260px 0px' });
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
-
-  return (
-    <div ref={host} className={'deferred-mount' + (className ? ' ' + className : '')}>
-      {ready ? children : <div className="deferred-placeholder" style={{ minHeight: minHeight }} aria-hidden="true"><span /></div>}
-    </div>
-  );
+  return <div ref={host} className={'deferred-mount' + (className ? ' ' + className : '')}>
+    {ready ? children : <div className="deferred-placeholder" style={{ minHeight }} aria-hidden="true"><span /></div>}
+  </div>;
 }
 
 function Header() {
@@ -257,30 +247,12 @@ function About() {
             <div className="flip-wrap-heading"><span className="eyebrow"><i /> BEYOND THE JOB TITLE</span><small>INTERACTIVE PROFILE</small></div>
             <Deferred minHeight={390}>
               <Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 390 }} />}>
-                <FlipCard
-                  width={330}
-                  height={390}
-                  radius={18}
-                  background="#140a9a"
-                  color="#ffffff"
-                  shadowColor="#140a9a"
-                  shadowOpacity={0.16}
-                  glare
-                  glareOpacity={0.12}
-                  tilt
-                  tiltMax={7}
-                  hoverScale={1.015}
-                  ariaLabel="Balik kartu untuk melihat latar belakang teknis"
-                  className="profile-flip-card"
+                <FlipCard width={330} height={390} radius={18} background="#140a9a" color="#ffffff" shadowColor="#140a9a" shadowOpacity={0.16} glare glareOpacity={0.12} tilt tiltMax={7} hoverScale={1.015} ariaLabel="Balik kartu untuk melihat latar belakang teknis" className="profile-flip-card"
                   front={
                     <div className="profile-flip-face profile-flip-front">
                       <div className="flip-face-top"><span>PROFILE / 01</span><i /></div>
                       <div className="flip-monogram">IM<span>.</span></div>
-                      <div className="flip-front-copy">
-                        <span>DOCUMENT CENTER · TAX</span>
-                        <strong>Muhammad Iqbal Maulana</strong>
-                        <small>PT Komatsu Indonesia</small>
-                      </div>
+                      <div className="flip-front-copy"><span>DOCUMENT CENTER · TAX</span><strong>Muhammad Iqbal Maulana</strong><small>PT Komatsu Indonesia</small></div>
                       <div className="flip-card-hint">TAP TO EXPLORE <b>↻</b></div>
                     </div>
                   }
@@ -300,27 +272,21 @@ function About() {
           </div>
         </div>
         <div className="spotlight-grid">
-          <Deferred minHeight={190}>
-            <Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 190 }} />}>
-              <SpotlightCard theme="light" spotlightColor="#140a9a" intensity={0.18} spotlightSize={250} borderGlow={0.42} proximity={90} className="spotlight-profile-card">
-                <div className="spotlight-card-content"><span className="spotlight-index">01 / EXPERIENCE</span><strong className="spotlight-stat">4 yrs 6 mos</strong><h3>Komatsu Indonesia</h3><p>Perjalanan profesional di Document Center dan sinergi Tax.</p></div>
-              </SpotlightCard>
-            </Suspense>
-          </Deferred>
-          <Deferred minHeight={190}>
-            <Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 190 }} />}>
-              <SpotlightCard theme="light" spotlightColor="#0e1271" intensity={0.16} spotlightSize={250} borderGlow={0.38} proximity={90} className="spotlight-profile-card">
-                <div className="spotlight-card-content"><span className="spotlight-index">02 / OPERATIONS</span><strong className="spotlight-stat">Tax + Document</strong><h3>Operational synergy</h3><p>Dokumen, data, invoice, dan koordinasi lintas departemen.</p></div>
-              </SpotlightCard>
-            </Suspense>
-          </Deferred>
-          <Deferred minHeight={190}>
-            <Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 190 }} />}>
-              <SpotlightCard theme="light" spotlightColor="#0e1271" intensity={0.15} spotlightSize={250} borderGlow={0.38} proximity={90} className="spotlight-profile-card">
-                <div className="spotlight-card-content"><span className="spotlight-index">03 / LEARNING</span><strong className="spotlight-stat">IT foundation</strong><h3>Informatics engineering</h3><p>IoT Smart Watering, Arduino, Flutter seminar, dan software analysis.</p></div>
-              </SpotlightCard>
-            </Suspense>
-          </Deferred>
+          <Deferred minHeight={190}><Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 190 }} />}>
+            <SpotlightCard theme="light" spotlightColor="#140a9a" intensity={0.18} spotlightSize={250} borderGlow={0.42} proximity={90} className="spotlight-profile-card">
+              <div className="spotlight-card-content"><span className="spotlight-index">01 / EXPERIENCE</span><strong className="spotlight-stat">4 yrs 6 mos</strong><h3>Komatsu Indonesia</h3><p>Perjalanan profesional di Document Center dan sinergi Tax.</p></div>
+            </SpotlightCard>
+          </Suspense></Deferred>
+          <Deferred minHeight={190}><Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 190 }} />}>
+            <SpotlightCard theme="light" spotlightColor="#0e1271" intensity={0.16} spotlightSize={250} borderGlow={0.38} proximity={90} className="spotlight-profile-card">
+              <div className="spotlight-card-content"><span className="spotlight-index">02 / OPERATIONS</span><strong className="spotlight-stat">Tax + Document</strong><h3>Operational synergy</h3><p>Dokumen, data, invoice, dan koordinasi lintas departemen.</p></div>
+            </SpotlightCard>
+          </Suspense></Deferred>
+          <Deferred minHeight={190}><Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 190 }} />}>
+            <SpotlightCard theme="light" spotlightColor="#0e1271" intensity={0.15} spotlightSize={250} borderGlow={0.38} proximity={90} className="spotlight-profile-card">
+              <div className="spotlight-card-content"><span className="spotlight-index">03 / LEARNING</span><strong className="spotlight-stat">IT foundation</strong><h3>Informatics engineering</h3><p>IoT Smart Watering, Arduino, Flutter seminar, dan software analysis.</p></div>
+            </SpotlightCard>
+          </Suspense></Deferred>
         </div>
       </div>
     </section>
@@ -358,7 +324,6 @@ function Experience() {
 function Skills() {
   const [focused, setFocused] = useState(2);
   const focus = focusOptions[focused] || focusOptions[0];
-
   return (
     <section className="section skills-section" id="skills">
       <div className="section-inner">
@@ -366,80 +331,24 @@ function Skills() {
         <div className="skills-showcase-grid">
           <article className="skill-carousel-panel">
             <div className="interaction-panel-heading"><div><span>01 / SKILL ORBIT</span><h3>Capabilities in motion.</h3></div><small>DRAG · FOCUS · EXPLORE</small></div>
-            <Deferred minHeight={445}>
-              <Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 445 }} />}>
-                <CircularCarousel
-                  items={skillArtwork}
-                  preset="cylinder"
-                  intro="assemble"
-                  cardWidth={205}
-                  aspectRatio={0.82}
-                  gap={18}
-                  curve={0.75}
-                  tilt={-7}
-                  autoplay="drift"
-                  speed={9}
-                  momentum={0.55}
-                  draggable
-                  snap
-                  pauseOnHover
-                  focusOnClick
-                  parallax={0.2}
-                  stretch={0.32}
-                  depthFade={0.38}
-                  fadeColor="#ffffff"
-                  innerShade={0.22}
-                  cornerRadius={16}
-                  captions
-                  style={{ height: '445px' }}
-                />
-              </Suspense>
-            </Deferred>
+            <Deferred minHeight={445}><Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 445 }} />}>
+              <CircularCarousel items={skillArtwork} preset="cylinder" intro="assemble" cardWidth={205} aspectRatio={0.82} gap={18} curve={0.75} tilt={-7} autoplay="drift" speed={9} momentum={0.55} draggable snap pauseOnHover focusOnClick parallax={0.2} stretch={0.32} depthFade={0.38} fadeColor="#ffffff" innerShade={0.22} cornerRadius={16} captions style={{ height: '445px' }} />
+            </Suspense></Deferred>
           </article>
           <article className="skill-wheel-panel">
             <div className="interaction-panel-heading"><div><span>02 / FOCUS SELECTOR</span><h3>Explore focus areas.</h3></div></div>
             <p className="wheel-intro">Putar pilihan untuk melihat konteks kemampuan yang digunakan dalam pekerjaan dan proses belajar.</p>
             <div className="option-wheel-stage">
-              <Deferred minHeight={340}>
-                <Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 340 }} />}>
-                  <OptionWheel
-                    items={focusOptions.map(item => item.label)}
-                    defaultSelected={2}
-                    onChange={index => setFocused(index)}
-                    textColor="#94a3b8"
-                    activeColor="#140a9a"
-                    side="left"
-                    fontSize={1.24}
-                    spacing={1.65}
-                    curve={1.12}
-                    tilt={9}
-                    blur={1.2}
-                    fade={0.3}
-                    minOpacity={0.1}
-                    smoothing={190}
-                    inset={22}
-                    loop
-                    draggable
-                    className="portfolio-option-wheel"
-                  />
-                </Suspense>
-              </Deferred>
+              <Deferred minHeight={340}><Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 340 }} />}>
+                <OptionWheel items={focusOptions.map(item => item.label)} defaultSelected={2} onChange={index => setFocused(index)} textColor="#94a3b8" activeColor="#140a9a" side="left" fontSize={1.24} spacing={1.65} curve={1.12} tilt={9} blur={1.2} fade={0.3} minOpacity={0.1} smoothing={190} inset={22} loop draggable className="portfolio-option-wheel" />
+              </Suspense></Deferred>
             </div>
-            <div className="focus-detail" aria-live="polite">
-              <span>SELECTED FOCUS</span>
-              <strong>{focus.label}</strong>
-              <p>{focus.detail}</p>
-            </div>
+            <div className="focus-detail" aria-live="polite"><span>SELECTED FOCUS</span><strong>{focus.label}</strong><p>{focus.detail}</p></div>
           </article>
         </div>
         <div className="capability-grid">
           {capabilities.map(([title, description], index) => (
-            <article className="capability-card" key={title}>
-              <span className="capability-number">{String(index + 1).padStart(2, '0')}</span>
-              <span className="capability-rule" />
-              <h3>{title}</h3>
-              <p>{description}</p>
-            </article>
+            <article className="capability-card" key={title}><span className="capability-number">{String(index + 1).padStart(2, '0')}</span><span className="capability-rule" /><h3>{title}</h3><p>{description}</p></article>
           ))}
         </div>
         <div className="skill-strip"><span className="skill-strip-label">SKILL SET</span><div className="skill-chips">{skills.map(skill => <span key={skill}>{skill}</span>)}</div></div>
@@ -460,35 +369,23 @@ function WorkFiles() {
     { title: 'Flutter integration seminar', description: 'Seminar integrasi Smart Watering dengan pengembangan aplikasi Flutter.' },
     { title: 'E-Learning use case', description: 'Analisis aplikasi dan penyusunan Use Case diagram untuk tugas E-Learning.' },
   ];
-
   return (
     <section className="section files-section" id="files">
       <div className="section-inner">
-        <div className="files-heading-row">
-          <SectionHeading kicker="04 / WORK FILES" title="Work, organized." description="Ringkasan pengalaman operasional dan pembelajaran yang membentuk perjalanan profesional." />
-          <span className="files-aside-note">INTERACTIVE FILES</span>
-        </div>
+        <div className="files-heading-row"><SectionHeading kicker="04 / WORK FILES" title="Work, organized." description="Ringkasan pengalaman operasional dan pembelajaran yang membentuk perjalanan profesional." /><span className="files-aside-note">INTERACTIVE FILES</span></div>
         <div className="folder-grid">
           <article className="folder-card">
             <div className="folder-card-head"><span className="folder-card-index">01</span><div><h3>Komatsu operations</h3><p>Document Center · Tax synergy</p></div></div>
-            <div className="folder-component-stage">
-              <Deferred minHeight={285}>
-                <Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 285 }} />}>
-                  <Folder items={komatsuFiles} label="KOMATSU" mode="book" variant="solid" color="#140a9a" paperColor="#ffffff" tabPosition="right" layout="spread" size={0.76} openOn="click" draggable={false} zoomOnClick peek intro tilt={0.35} bounce={0.35} speed={0.9} theme="light" />
-                </Suspense>
-              </Deferred>
-            </div>
+            <div className="folder-component-stage"><Deferred minHeight={285}><Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 285 }} />}>
+              <Folder items={komatsuFiles} label="KOMATSU" mode="book" variant="solid" color="#140a9a" paperColor="#ffffff" tabPosition="right" layout="spread" size={0.76} openOn="click" draggable={false} zoomOnClick peek intro tilt={0.35} bounce={0.35} speed={0.9} theme="light" />
+            </Suspense></Deferred></div>
             <p className="folder-card-foot">Operational experience since June 2022</p>
           </article>
           <article className="folder-card">
             <div className="folder-card-head"><span className="folder-card-index">02</span><div><h3>PPTIK internship</h3><p>Institut Teknologi Bandung · 2021</p></div></div>
-            <div className="folder-component-stage">
-              <Deferred minHeight={285}>
-                <Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 285 }} />}>
-                  <Folder items={pptikFiles} label="PPTIK / ITB" mode="book" variant="solid" color="#0e1271" paperColor="#ffffff" tabPosition="left" layout="spread" size={0.76} openOn="click" draggable={false} zoomOnClick peek intro tilt={0.35} bounce={0.35} speed={0.9} theme="light" />
-                </Suspense>
-              </Deferred>
-            </div>
+            <div className="folder-component-stage"><Deferred minHeight={285}><Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 285 }} />}>
+              <Folder items={pptikFiles} label="PPTIK / ITB" mode="book" variant="solid" color="#0e1271" paperColor="#ffffff" tabPosition="left" layout="spread" size={0.76} openOn="click" draggable={false} zoomOnClick peek intro tilt={0.35} bounce={0.35} speed={0.9} theme="light" />
+            </Suspense></Deferred></div>
             <p className="folder-card-foot">Online internship · February — April 2021</p>
           </article>
         </div>
@@ -498,7 +395,26 @@ function WorkFiles() {
 }
 
 function Education() {
-
+  return (
+    <section className="section education-section" id="education">
+      <div className="section-inner education-layout">
+        <SectionHeading kicker="05 / EDUCATION" title="Learning in progress." description="Fondasi akademik dan pengalaman belajar yang membentuk cara berpikir analitis." />
+        <div className="education-cards">
+          <article className="education-card">
+            <div className="education-icon"><Icon name="graduation" size={24} /></div>
+            <div><span className="education-label">UNDERGRADUATE</span><h3>Universitas Esa Unggul</h3><p>Teknik Informatika</p><small>Fakultas Ilmu Komputer</small></div>
+            <span className="education-arrow">↗</span>
+          </article>
+          <article className="education-card education-card-secondary">
+            <div className="education-icon"><Icon name="briefcase" size={24} /></div>
+            <div><span className="education-label">ONLINE INTERNSHIP · 2021</span><h3>PPTIK — Institut Teknologi Bandung</h3><p>IoT Smart Watering · Arduino · Software Analysis</p><small>Remote · February — April 2021</small></div>
+            <span className="education-arrow">↗</span>
+          </article>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function Contact() {
   return (

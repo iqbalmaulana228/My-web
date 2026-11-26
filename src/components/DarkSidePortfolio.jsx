@@ -98,9 +98,9 @@ export default function DarkSidePortfolio({active = true}) {
       {area:'code',text:'git status --short'},
       {area:'journey',text:'build -> test -> iterate'}
     ];
-    let active=0,position=0,deleting=false,timer;
+    let sequenceIndex=0,position=0,deleting=false,timer;
     const tick=()=>{
-      const current=sequence[active];
+      const current=sequence[sequenceIndex];
       if(!deleting){
         position=Math.min(position+1,current.text.length);
         setTyping({area:current.area,text:current.text.slice(0,position)});
@@ -112,7 +112,7 @@ export default function DarkSidePortfolio({active = true}) {
       setTyping({area:current.area,text:current.text.slice(0,position)});
       if(position===0){
         deleting=false;
-        active=(active+1)%sequence.length;
+        sequenceIndex=(sequenceIndex+1)%sequence.length;
         timer=setTimeout(tick,1050);
         return;
       }

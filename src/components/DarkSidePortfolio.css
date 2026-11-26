@@ -83,3 +83,36 @@ position:relative;isolation:isolate;min-height:100vh;overflow:clip;color:var(--t
   background: var(--blue);
   animation: ds-blink 1s steps(2,start) infinite;
 }
+
+
+/* In-view character typing for Dark Side section headings */
+.ds-typewriter {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: baseline;
+}
+.ds-typewriter-measure {
+  display: block;
+  visibility: hidden;
+  white-space: inherit;
+}
+.ds-typewriter-output {
+  position: absolute;
+  inset: 0;
+  display: block;
+  white-space: inherit;
+}
+.ds-typewriter-accent { color: var(--blue); }
+.ds-typewriter-caret {
+  display: inline-block;
+  width: .58em;
+  height: .9em;
+  margin-left: .08em;
+  vertical-align: -.08em;
+  background: var(--blue);
+  animation: ds-blink 1s steps(2,start) infinite;
+}
+@media(prefers-reduced-motion:reduce) {
+  .ds-typewriter-caret { animation: none; opacity: 1; }
+}

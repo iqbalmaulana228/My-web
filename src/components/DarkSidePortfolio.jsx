@@ -55,6 +55,75 @@ function goTo(id) {
   document.getElementById('ds-' + id)?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
+function TypewriterText({
+  text,
+  active = true,
+  speed = 48,
+  startDelay = 0,
+  accentSuffix = '',
+  className = ''
+}) {
+  const elementRef = useRef(null);
+  const progressRef = useRef(0);
+  const [started, setStarted] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const node = elementRef.current;
+    if (!active || started || !node) return undefined;
+
+    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion || !('IntersectionObserver' in window)) {
+      progressRef.current = text.length + accentSuffix.length;
+      setProgress(progressRef.current);
+      setStarted(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      setStarted(true);
+      observer.disconnect();
+    }, { threshold: 0.15, rootMargin: '0px 0px -14% 0px' });
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [active, started, text, accentSuffix]);
+
+  useEffect(() => {
+    const fullLength = text.length + accentSuffix.length;
+    if (!active || !started || progressRef.current >= fullLength) return undefined;
+
+    let timer;
+    const typeNext = () => {
+      const next = Math.min(progressRef.current + 1, fullLength);
+      progressRef.current = next;
+      setProgress(next);
+      if (next < fullLength) timer = setTimeout(typeNext, speed);
+    };
+
+    timer = setTimeout(typeNext, startDelay);
+    return () => clearTimeout(timer);
+  }, [active, started, text, accentSuffix, speed, startDelay]);
+
+  const visible = (text + accentSuffix).slice(0, progress);
+  const plainVisible = visible.slice(0, text.length);
+  const accentVisible = visible.slice(text.length);
+  const complete = progress >= text.length + accentSuffix.length;
+
+  return (
+    <span ref={elementRef} className={`ds-typewriter ${className}`.trim()} aria-label={text + accentSuffix}>
+      <span className="ds-typewriter-measure" aria-hidden="true">
+        {text}<span className="ds-typewriter-accent">{accentSuffix}</span>
+      </span>
+      <span className="ds-typewriter-output" aria-hidden="true">
+        {plainVisible}<span className="ds-typewriter-accent">{accentVisible}</span>
+        {started && !complete && <i className="ds-typewriter-caret" />}
+      </span>
+    </span>
+  );
+}
+
 const profileLines = [
   {
     text: 'export const developer = {',
@@ -182,7 +251,7 @@ export default function DarkSidePortfolio({active = true}) {
 
     if(profileProgressRef.current<profileText.length){
       setTyping({area:'',text:''});
-      timer=setTimeout(typeProfile,650);
+      timer=setTimeout(typeProfile,3200);
     }else{
       timer=setTimeout(tickSequence,700);
     }
@@ -241,8 +310,8 @@ export default function DarkSidePortfolio({active = true}) {
         <main className="ds-main">
           <section className="ds-hero" id="ds-profile">
             <div className="ds-hero-copy">
-              <div className="ds-eyebrow"><b>01</b> WHOAMI <i>·</i> DEVELOPER PROFILE</div>
-              <h1>HELLO,<br/><span>WORLD_</span></h1>
+              <div className="ds-eyebrow"><b>01</b> <TypewriterText text="WHOAMI · DEVELOPER PROFILE" active={active} speed={48} startDelay={120}/></div>
+              <h1><TypewriterText text="HELLO," active={active} speed={68} startDelay={1050}/><br/><span><TypewriterText text="WORLD_" active={active} speed={68} startDelay={1740}/></span></h1>
               <div className="ds-role">MUHAMMAD IQBAL MAULANA</div>
               <p className="ds-description">Informatics Engineering student exploring software development, web applications, automation, OCR, and AI-assisted workflows. I build practical tools to turn everyday problems into usable software.</p>
               <div className="ds-type-line"><b>~/</b><span>{typing.area === 'hero' ? typing.text : ''}</span>{typing.area === 'hero' && typing.text && <i className="ds-caret"/>}</div>
@@ -264,7 +333,7 @@ export default function DarkSidePortfolio({active = true}) {
           </section>
 
           <section className="ds-section" id="ds-stack">
-            <div className="ds-section-heading"><div><small>02 / STACK.JSON</small><h2>TOOLS OF THE TRADE<span>_</span></h2></div><p>Technologies and platforms listed in my GitHub profile README.</p></div>
+            <div className="ds-section-heading"><div><small><TypewriterText text="02 / STACK.JSON" active={active} speed={42}/></small><h2><TypewriterText text="TOOLS OF THE TRADE" accentSuffix="_" active={active} speed={52} startDelay={420}/></h2></div><p><TypewriterText text="Technologies and platforms listed in my GitHub profile README." active={active} speed={24} startDelay={930}/></p></div>
             <div className="ds-stack-controls"><span>SELECT NODE</span>
               <Suspense fallback={<div className="ds-loading">Loading selector...</div>}>
                 <RubberSegment items={[{value:'languages',label:'LANGUAGES'},{value:'web',label:'WEB'},{value:'tooling',label:'TOOLING'}]} value={stackGroup} onChange={setStackGroup} trackColor="#101a25" thumbColor="#86c9fc" textColor="#8ca0b2" activeTextColor="#0a1534" size="sm" radius={5} stretch={115} squash={4} className="ds-rubber-segment" aria-label="Technology categories"/>
@@ -277,7 +346,7 @@ export default function DarkSidePortfolio({active = true}) {
           </section>
 
           <section className="ds-section" id="ds-projects">
-            <div className="ds-section-heading"><div><small>03 / REPOSITORIES</small><h2>SELECTED BUILDS<span>_</span></h2></div><p>A sample of public projects and experiments from my GitHub account.</p></div>
+            <div className="ds-section-heading"><div><small><TypewriterText text="03 / REPOSITORIES" active={active} speed={42}/></small><h2><TypewriterText text="SELECTED BUILDS" accentSuffix="_" active={active} speed={52} startDelay={420}/></h2></div><p><TypewriterText text="A sample of public projects and experiments from my GitHub account." active={active} speed={24} startDelay={930}/></p></div>
             <div className="ds-project-grid">
               {projects.map((project,i)=><article className="ds-project-card" key={project.id} style={{'--project-index':i}}>
                 <div className="ds-project-top"><span>{project.kind}</span><b>{String(i+1).padStart(2,'0')}</b></div>
@@ -293,7 +362,7 @@ export default function DarkSidePortfolio({active = true}) {
           </section>
 
           <section className="ds-section" id="ds-journey">
-            <div className="ds-section-heading"><div><small>04 / BUILD.LOG</small><h2>LEARNING IN PUBLIC<span>_</span></h2></div><p>Curiosity moves between application development, data, automation, and intelligent tools.</p></div>
+            <div className="ds-section-heading"><div><small><TypewriterText text="04 / BUILD.LOG" active={active} speed={42}/></small><h2><TypewriterText text="LEARNING IN PUBLIC" accentSuffix="_" active={active} speed={52} startDelay={420}/></h2></div><p><TypewriterText text="Curiosity moves between application development, data, automation, and intelligent tools." active={active} speed={24} startDelay={930}/></p></div>
             <div className="ds-journey-grid">
               <article><small>TRACK_01</small><h3>APPLICATIONS</h3><p>Building browser-based tools, productivity apps, and full-stack workspaces.</p><code>web / mobile / full-stack</code></article>
               <article><small>TRACK_02</small><h3>AUTOMATION</h3><p>Reducing manual work through document processing, OCR, data transformation, and workflow automation.</p><code>ocr / extraction / workflow</code></article>
@@ -304,7 +373,7 @@ export default function DarkSidePortfolio({active = true}) {
           </section>
 
           <section className="ds-section" id="ds-contact">
-            <div className="ds-section-heading"><div><small>05 / ENDPOINTS</small><h2>CONNECT TO THE REPO<span>_</span></h2></div><p>Open source work, technical discussions, or opportunities to build something useful.</p></div>
+            <div className="ds-section-heading"><div><small><TypewriterText text="05 / ENDPOINTS" active={active} speed={42}/></small><h2><TypewriterText text="CONNECT TO THE REPO" accentSuffix="_" active={active} speed={52} startDelay={420}/></h2></div><p><TypewriterText text="Open source work, technical discussions, or opportunities to build something useful." active={active} speed={24} startDelay={930}/></p></div>
             <div className="ds-contact-links">
               <a href={GITHUB} target="_blank" rel="noreferrer"><b>GH</b><span><small>GITHUB</small><strong>iqbalmaulana228</strong></span><i>↗</i></a>
               <a href={LINKEDIN} target="_blank" rel="noreferrer"><b>in</b><span><small>LINKEDIN</small><strong>Professional profile</strong></span><i>↗</i></a>

@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import Lanyard from './components/Lanyard.jsx';
+import SlingThemeButton from './components/SlingThemeButton.jsx';
 
 const CircularCarousel = lazy(() => import('./components/reactbits/CircularCarousel.jsx'));
 const FlipCard = lazy(() => import('./components/reactbits/FlipCard.jsx'));
@@ -12,7 +13,16 @@ const TrueFocus = lazy(() => import('./components/reactbits/TrueFocus.jsx'));
 const VariableProximity = lazy(() => import('./components/reactbits/VariableProximity.jsx'));
 const TiltedCard = lazy(() => import('./components/reactbits/TiltedCard.jsx'));
 
+const THEME_STORAGE_KEY = 'iqbal-portfolio-theme';
 const profileUrl = 'https://www.linkedin.com/in/muhammad-iqbal-maulana228';
+
+function readSavedTheme() {
+  try {
+    return window.localStorage.getItem(THEME_STORAGE_KEY) === 'dark';
+  } catch {
+    return false;
+  }
+}
 
 const experiences = [
   {
@@ -142,7 +152,7 @@ function Deferred({ children, className = '', minHeight = 320 }) {
   </div>;
 }
 
-function Header() {
+function Header({ isDark }) {
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const nav = [
@@ -200,7 +210,7 @@ function Header() {
             items={nav}
             activeIndex={activeIndex}
             onChange={selectNav}
-            theme="light"
+            theme={isDark ? "dark" : "light"}
             color="#140a9a"
             activeTextColor="#ffffff"
             colors={['#ffc72c', '#86c9fc', '#ee3124']}
@@ -539,7 +549,7 @@ function Education() {
 }
 
 
-function ExploreMenu() {
+function ExploreMenu({ isDark }) {
   const items = [
     { text: 'Experience', link: '#experience', meta: '2021 — NOW', marquee: 'DOCUMENT CENTER · TAX COORDINATION', image: skillArtwork[1].src },
     { text: 'Capabilities', link: '#skills', meta: 'OPS + IT', marquee: 'DATA · REPORTING · PROCESS IMPROVEMENT', image: skillArtwork[0].src },
@@ -562,8 +572,8 @@ function ExploreMenu() {
                 radius={115}
                 falloff="gaussian"
                 smoothing={0.14}
-                fromColor="#0e1271"
-                toColor="#140a9a"
+                fromColor={isDark ? '#c5c5ff' : '#0e1271'}
+                toColor={isDark ? '#ffffff' : '#140a9a'}
                 scale={1.035}
                 lift={-2}
                 fontSize="clamp(32px, 4vw, 48px)"
@@ -625,6 +635,20 @@ function Footer() {
 }
 
 export default function App() {
+  const [isDark, setIsDark] = useState(readSavedTheme);
+
+  useEffect(() => {
+    const theme = isDark ? 'dark' : 'light';
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isDark ? '#0b1120' : '#140A9A');
+    try {
+      window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // Theme still works for the current session when storage is unavailable.
+    }
+  }, [isDark]);
+
   useEffect(() => {
     const header = document.querySelector('.site-header');
     let frame = 0;
@@ -696,7 +720,7 @@ export default function App() {
 
   return (
     <>
-      <Header />
+      <Header isDark={isDark} />
       <main>
         <Hero />
         <QuickFacts />
@@ -705,10 +729,11 @@ export default function App() {
         <Skills />
         <WorkFiles />
         <Education />
-        <ExploreMenu />
+        <ExploreMenu isDark={isDark} />
         <Contact />
       </main>
       <Footer />
+      <SlingThemeButton isDark={isDark} onToggle={() => setIsDark(current => !current)} />
     </>
   );
 }

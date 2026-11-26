@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1440" viewBox="0 0 1024 1440">
+  <rect width="1024" height="1440" rx="34" fill="#f8fafc"/>
+  <rect width="1024" height="24" fill="#140A9A"/>
+  <rect x="72" y="82" width="880" height="5" rx="2.5" fill="#FFC72C"/>
+  <text x="80" y="180" fill="#140A9A" font-family="Arial,sans-serif" font-size="32" font-weight="700" letter-spacing="8">PROFILE SNAPSHOT</text>
+  <text x="80" y="310" fill="#111827" font-family="Arial,sans-serif" font-size="48" font-weight="700">DOCUMENTS.</text>
+  <text x="80" y="375" fill="#111827" font-family="Arial,sans-serif" font-size="48" font-weight="700">PROCESS.</text>
+  <text x="80" y="440" fill="#111827" font-family="Arial,sans-serif" font-size="48" font-weight="700">CONTINUOUS LEARNING.</text>
+  <rect x="80" y="520" width="864" height="3" fill="#e2e8f0"/>
+  <text x="80" y="630" fill="#64748b" font-family="Arial,sans-serif" font-size="28" font-weight="700" letter-spacing="4">PROFESSIONAL FOCUS</text>
+  <circle cx="95" cy="720" r="9" fill="#FFC72C"/><text x="130" y="733" fill="#1e293b" font-family="Arial,sans-serif" font-size="35">Document administration</text>
+  <circle cx="95" cy="820" r="9" fill="#FFC72C"/><text x="130" y="833" fill="#1e293b" font-family="Arial,sans-serif" font-size="35">Invoice processing</text>
+  <circle cx="95" cy="920" r="9" fill="#FFC72C"/><text x="130" y="933" fill="#1e293b" font-family="Arial,sans-serif" font-size="35">Excel &amp; reporting</text>
+  <circle cx="95" cy="1020" r="9" fill="#FFC72C"/><text x="130" y="1033" fill="#1e293b" font-family="Arial,sans-serif" font-size="35">Internal coordination</text>
+  <rect x="80" y="1130" width="864" height="185" rx="24" fill="#140A9A"/>
+  <text x="125" y="1208" fill="#86C9FC" font-family="Arial,sans-serif" font-size="26" letter-spacing="4">CONNECT</text>
+  <text x="125" y="1270" fill="#fff" font-family="Arial,sans-serif" font-size="30" font-weight="600">linkedin.com/in/muhammad-iqbal-maulana228</text>
+</svg>

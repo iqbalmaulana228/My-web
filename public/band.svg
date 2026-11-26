@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="960" viewBox="0 0 240 960">
+  <rect width="240" height="960" fill="#140A9A"/>
+  <rect x="14" width="5" height="960" fill="#FFC72C"/>
+  <rect x="221" width="5" height="960" fill="#86C9FC"/>
+  <g fill="#fff" fill-opacity=".78" font-family="Arial,sans-serif" font-size="22" font-weight="700" letter-spacing="4" text-anchor="middle">
+    <text x="120" y="85">IQBAL</text><text x="120" y="130">MAULANA</text>
+    <text x="120" y="290">IQBAL</text><text x="120" y="335">MAULANA</text>
+    <text x="120" y="495">IQBAL</text><text x="120" y="540">MAULANA</text>
+    <text x="120" y="700">IQBAL</text><text x="120" y="745">MAULANA</text>
+    <text x="120" y="905">PORTFOLIO</text>
+  </g>
+  <g fill="#FFC72C"><circle cx="120" cy="190" r="8"/><circle cx="120" cy="395" r="8"/><circle cx="120" cy="600" r="8"/><circle cx="120" cy="805" r="8"/></g>
+</svg>

@@ -6,6 +6,7 @@ const FlipCard = lazy(() => import('./components/reactbits/FlipCard.jsx'));
 const Folder = lazy(() => import('./components/reactbits/Folder.jsx'));
 const OptionWheel = lazy(() => import('./components/reactbits/OptionWheel.jsx'));
 const FlowingMenu = lazy(() => import('./components/reactbits/FlowingMenu.jsx'));
+const GooeyNav = lazy(() => import('./components/reactbits/GooeyNav.jsx'));
 const TextLoop = lazy(() => import('./components/reactbits/TextLoop.jsx'));
 const TrueFocus = lazy(() => import('./components/reactbits/TrueFocus.jsx'));
 const VariableProximity = lazy(() => import('./components/reactbits/VariableProximity.jsx'));
@@ -143,20 +144,79 @@ function Deferred({ children, className = '', minHeight = 320 }) {
 
 function Header() {
   const [open, setOpen] = useState(false);
-  const nav = [['Tentang', '#about'], ['Pengalaman', '#experience'], ['Keahlian', '#skills'], ['Koleksi', '#files'], ['Pendidikan', '#education']];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const nav = [
+    { label: 'Tentang', href: '#about' },
+    { label: 'Pengalaman', href: '#experience' },
+    { label: 'Keahlian', href: '#skills' },
+    { label: 'Koleksi', href: '#files' },
+    { label: 'Pendidikan', href: '#education' },
+    { label: 'Kontak', href: '#contact' },
+  ];
+
+  useEffect(() => {
+    let frame = 0;
+    const updateActive = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        const marker = window.scrollY + Math.min(window.innerHeight * 0.32, 240);
+        let nextIndex = 0;
+        nav.forEach((item, index) => {
+          const section = document.querySelector(item.href);
+          if (section && section.getBoundingClientRect().top + window.scrollY <= marker) nextIndex = index;
+        });
+        setActiveIndex(current => current === nextIndex ? current : nextIndex);
+        frame = 0;
+      });
+    };
+
+    updateActive();
+    window.addEventListener('scroll', updateActive, { passive: true });
+    window.addEventListener('resize', updateActive);
+    return () => {
+      window.removeEventListener('scroll', updateActive);
+      window.removeEventListener('resize', updateActive);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  const selectNav = index => {
+    setActiveIndex(index);
+    setOpen(false);
+  };
+
   return (
     <header className="site-header">
-      <a className="brand" href="#top" aria-label="Kembali ke beranda">
+      <a className="brand" href="#top" aria-label="Kembali ke beranda" onClick={() => setActiveIndex(0)}>
         <span className="brand-mark">IM</span>
         <span className="brand-copy"><strong>IQBAL MAULANA</strong><small>PROFESSIONAL PORTFOLIO</small></span>
       </a>
-      <button className="menu-toggle" onClick={() => setOpen(!open)} aria-label={open ? 'Tutup navigasi' : 'Buka navigasi'} aria-expanded={open}>
+      <button className="menu-toggle" onClick={() => setOpen(!open)} aria-label={open ? 'Tutup navigasi' : 'Buka navigasi'} aria-expanded={open} aria-controls="primary-navigation">
         <Icon name={open ? 'close' : 'menu'} size={21} />
       </button>
-      <nav className={open ? 'main-nav is-open' : 'main-nav'}>
-        {nav.map(([label, href]) => <a key={href} href={href} onClick={() => setOpen(false)}>{label}</a>)}
-        <a className="nav-contact" href="#contact" onClick={() => setOpen(false)}>Hubungi saya <Icon name="arrow" size={15} /></a>
-      </nav>
+      <div id="primary-navigation" className={open ? 'main-nav is-open' : 'main-nav'}>
+        <Suspense fallback={<nav className="main-nav-fallback" aria-label="Navigasi utama">{nav.map((item, index) => <a key={item.href} href={item.href} onClick={() => selectNav(index)}>{item.label}</a>)}</nav>}>
+          <GooeyNav
+            items={nav}
+            activeIndex={activeIndex}
+            onChange={selectNav}
+            theme="light"
+            color="#140a9a"
+            activeTextColor="#ffffff"
+            colors={['#ffc72c', '#86c9fc', '#ee3124']}
+            size="sm"
+            frame
+            animationTime={650}
+            particleCount={14}
+            timeVariance={260}
+            spread={44}
+            gooeyness={0.62}
+            wobble={0.42}
+            hoverEffect
+            className="portfolio-gooey-nav"
+          />
+        </Suspense>
+      </div>
     </header>
   );
 }

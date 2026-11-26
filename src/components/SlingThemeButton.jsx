@@ -42,7 +42,7 @@ export default function SlingThemeButton({ isDark, onToggle }) {
         axis="any"
         tapSends={false}
         disabled={false}
-        ariaLabel={isDark ? 'Aktifkan tema terang' : 'Aktifkan tema gelap'}
+        ariaLabel={isDark ? 'Kembali ke portfolio profesional' : 'Masuk ke Dark Side portfolio'}
         className="theme-switcher-sling"
       >
         {isDark ? <SunIcon /> : <MoonIcon />}

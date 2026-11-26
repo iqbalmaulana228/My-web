@@ -620,3 +620,49 @@ button { font: inherit; }
   .capability-tilted-card { height: 205px; }
   .capability-tilted-content { padding: 20px; }
 }
+
+
+/* React Bits TextLoop, TrueFocus and VariableProximity */
+.hero-focus-kicker { display: block; }
+.hero-focus-kicker .focus-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+}
+.hero-focus-kicker .focus-word {
+  margin: 0;
+  color: var(--blue);
+  font: 800 10px/1.8 Manrope, sans-serif;
+  letter-spacing: 2.1px;
+  cursor: default;
+}
+.hero-focus-kicker .true-focus-separator {
+  margin: 0 7px;
+  color: #94a3b8;
+  font: 700 9px Manrope, sans-serif;
+}
+.work-files-marquee {
+  width: 100%;
+  max-width: 1100px;
+  margin: 32px auto -16px;
+  overflow: hidden;
+}
+.portfolio-text-loop .text-loop-svg { width: 100%; }
+.explore-proximity-heading { display: inline-block; }
+.explore-proximity-heading .portfolio-variable-proximity {
+  display: inline;
+  font-family: Manrope, sans-serif;
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1.12;
+}
+@media (max-width: 760px) {
+  .hero-focus-kicker { margin-top: 27px; }
+  .hero-focus-kicker .focus-container { gap: 0; }
+  .hero-focus-kicker .focus-word { font-size: 9px; letter-spacing: 1.6px; }
+  .hero-focus-kicker .true-focus-separator { margin: 0 5px; font-size: 8px; }
+  .work-files-marquee { margin: 18px auto -18px; }
+  .explore-proximity-heading .portfolio-variable-proximity { letter-spacing: -1.5px; }
+}

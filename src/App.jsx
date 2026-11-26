@@ -6,6 +6,9 @@ const FlipCard = lazy(() => import('./components/reactbits/FlipCard.jsx'));
 const Folder = lazy(() => import('./components/reactbits/Folder.jsx'));
 const OptionWheel = lazy(() => import('./components/reactbits/OptionWheel.jsx'));
 const FlowingMenu = lazy(() => import('./components/reactbits/FlowingMenu.jsx'));
+const TextLoop = lazy(() => import('./components/reactbits/TextLoop.jsx'));
+const TrueFocus = lazy(() => import('./components/reactbits/TrueFocus.jsx'));
+const VariableProximity = lazy(() => import('./components/reactbits/VariableProximity.jsx'));
 const TiltedCard = lazy(() => import('./components/reactbits/TiltedCard.jsx'));
 
 const profileUrl = 'https://www.linkedin.com/in/muhammad-iqbal-maulana228';
@@ -174,7 +177,24 @@ function Hero() {
       <div className="hero-grid" />
       <div className="hero-copy">
         <div className="availability"><span className="availability-dot" /> OPEN TO OPPORTUNITIES <span className="availability-note">· Recruiters only</span></div>
-        <p className="hero-kicker">DOCUMENT CENTER STAFF <span>·</span> TAX <span>·</span> PT KOMATSU INDONESIA <span>·</span> UNDERGRADUATE</p>
+        <div className="hero-kicker hero-focus-kicker">
+          <Suspense fallback={<span>DOCUMENT CENTER STAFF · TAX · PT KOMATSU INDONESIA · UNDERGRADUATE</span>}>
+            <TrueFocus
+              sentence="DOCUMENT CENTER STAFF · TAX · PT KOMATSU INDONESIA · UNDERGRADUATE"
+              separator=" · "
+              focusStyle="underline"
+              easing="smooth"
+              blurAmount={1.6}
+              focusScale={1.02}
+              borderColor="#ffc72c"
+              glowColor="rgba(255,199,44,0.35)"
+              animationDuration={0.55}
+              pauseBetweenAnimations={1.35}
+              borderWidth={2}
+              unfocusedOpacity={0.72}
+            />
+          </Suspense>
+        </div>
         <h1>Precision in every document. <em>Progress</em> in every process.</h1>
         <p className="hero-intro">Saya mengelola dokumen dan proses invoice di lingkungan industri, dengan ketertarikan pada pengolahan data, perbaikan proses, dan teknologi informasi.</p>
         <div className="hero-actions">
@@ -409,6 +429,28 @@ function WorkFiles() {
             <p className="folder-card-foot">Online internship · February — April 2021</p>
           </article>
         </div>
+        <div className="work-files-marquee" aria-label="Document Center, Tax coordination, and process improvement">
+          <Suspense fallback={null}>
+            <TextLoop
+              text="DOCUMENT CENTER TAX COORDINATION PROCESS IMPROVEMENT"
+              shape="wave"
+              speed={42}
+              direction="forward"
+              separator="✦"
+              curviness={43}
+              tilt={-2}
+              fontSize={30}
+              fontWeight={800}
+              letterSpacing={2}
+              ribbon
+              ribbonColor="#140a9a"
+              ribbonWidth={56}
+              edgeFade={0.32}
+              pauseOnHover
+              className="portfolio-text-loop"
+            />
+          </Suspense>
+        </div>
       </div>
     </section>
   );
@@ -451,7 +493,24 @@ function ExploreMenu() {
         <div className="flowing-explore-heading">
           <div>
             <span className="eyebrow"><i /> 06 / EXPLORE</span>
-            <h2>Explore the portfolio.</h2>
+            <h2 className="explore-proximity-heading">
+            <Suspense fallback="Explore the portfolio.">
+              <VariableProximity
+                label="Explore the portfolio."
+                fromFontVariationSettings="'wght' 500"
+                toFontVariationSettings="'wght' 900"
+                radius={115}
+                falloff="gaussian"
+                smoothing={0.14}
+                fromColor="#0e1271"
+                toColor="#140a9a"
+                scale={1.035}
+                lift={-2}
+                fontSize="clamp(32px, 4vw, 48px)"
+                className="portfolio-variable-proximity"
+              />
+            </Suspense>
+          </h2>
           </div>
           <p>Pengalaman, kemampuan, dan perjalanan belajar dalam satu alur.</p>
         </div>

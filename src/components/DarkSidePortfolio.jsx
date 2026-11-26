@@ -7,6 +7,17 @@ const ThoughtLine = lazy(() => import('./reactbits/ThoughtLine.jsx'));
 const PromptBar = lazy(() => import('./reactbits/PromptBar.jsx'));
 const RubberSegment = lazy(() => import('./reactbits/RubberSegment.jsx'));
 
+const SpotlightCard = lazy(() => import('./reactbits/SpotlightCard.jsx'));
+const Magnet = lazy(() => import('./reactbits/Magnet.jsx'));
+const StarBorder = lazy(() => import('./reactbits/StarBorder.jsx'));
+const ClickSpark = lazy(() => import('./reactbits/ClickSpark.jsx'));
+const CountUp = lazy(() => import('./reactbits/CountUp.jsx'));
+const DecryptedText = lazy(() => import('./reactbits/DecryptedText.jsx'));
+const GlareHover = lazy(() => import('./reactbits/GlareHover.jsx'));
+const LogoLoop = lazy(() => import('./reactbits/LogoLoop.jsx'));
+const ScrollVelocity = lazy(() => import('./reactbits/ScrollVelocity.jsx'));
+const AnimatedContent = lazy(() => import('./reactbits/AnimatedContent.jsx'));
+
 const GITHUB = 'https://github.com/iqbalmaulana228';
 const LINKEDIN = 'https://www.linkedin.com/in/muhammad-iqbal-maulana228';
 const AVATAR = 'https://avatars.githubusercontent.com/u/128332877?v=4';
@@ -40,6 +51,17 @@ const stacks = {
   web:['HTML','CSS','React','Node.js','Next.js'],
   tooling:['Git','GitHub','VS Code','Vercel','MongoDB']
 };
+
+
+const technologyLoopItems = [
+  ...stacks.languages,
+  ...stacks.web,
+  ...stacks.tooling
+].map(label => ({
+  title: label,
+  ariaLabel: label,
+  node: <span className="ds-loop-token"><i>{label.slice(0, 2).toUpperCase()}</i>{label}</span>
+}));
 
 const commands = [
   {key:'whoami',name:'/whoami',description:'Show developer profile'},
@@ -303,7 +325,15 @@ export default function DarkSidePortfolio({active = true}) {
           <Suspense fallback={<div className="ds-loading">Loading navigation...</div>}>
             <BranchedMenu items={menu} defaultOpen={0} color="#b8c5d5" accentColor="#86c9fc" lineColor="#24374a" width={230} rowHeight={35} indent={45} fontSize={12} className="ds-branched-menu" onSelect={chooseMenu}/>
           </Suspense>
-          <div className="ds-sidebar-card"><small>CURRENT STATE</small><b>Always learning.</b><span>Shipping practical digital tools.</span><div className="ds-side-progress"><i/></div><small>BUILD / TEST / ITERATE</small></div>
+          <div className="ds-sidebar-card">
+            <small>CURRENT STATE</small>
+            <b className="ds-decrypted-host">
+              {active ? <Suspense fallback="Always learning."><DecryptedText text="Always learning." speed={42} maxIterations={11} sequential animateOn="view" scrambleColor="#86c9fc" className="ds-decrypted-visible" encryptedClassName="ds-decrypted-scramble"/></Suspense> : "Always learning."}
+            </b>
+            <span>Shipping practical digital tools.</span>
+            <div className="ds-side-progress"><i/></div>
+            <small>BUILD / TEST / ITERATE</small>
+          </div>
           <a className="ds-back-link" href={LINKEDIN} target="_blank" rel="noreferrer">PROFESSIONAL PROFILE ↗</a>
         </aside>
 
@@ -315,10 +345,65 @@ export default function DarkSidePortfolio({active = true}) {
               <div className="ds-role">MUHAMMAD IQBAL MAULANA</div>
               <p className="ds-description">Informatics Engineering student exploring software development, web applications, automation, OCR, and AI-assisted workflows. I build practical tools to turn everyday problems into usable software.</p>
               <div className="ds-type-line"><b>~/</b><span>{typing.area === 'hero' ? typing.text : ''}</span>{typing.area === 'hero' && typing.text && <i className="ds-caret"/>}</div>
-              <div className="ds-actions">
-                <button onClick={()=>goTo('projects')} className="ds-primary">EXPLORE REPOSITORIES <b>↘</b></button>
-                <a href={GITHUB} target="_blank" rel="noreferrer" className="ds-secondary">GITHUB PROFILE ↗</a>
-              </div>
+              {active ? (
+                <div className="ds-actions">
+                  <Suspense fallback={<button onClick={()=>goTo('projects')} className="ds-primary">EXPLORE REPOSITORIES <b>↘</b></button>}>
+                    <ClickSpark
+                      sparkColor={['#86c9fc','#7286ff']}
+                      sparkSize={8}
+                      sparkRadius={24}
+                      sparkCount={9}
+                      duration={460}
+                      shape="star"
+                      ring
+                      glow={0.38}
+                      className="ds-primary-spark"
+                      style={{display:'inline-flex',width:'auto',height:'auto',overflow:'visible'}}
+                    >
+                      <StarBorder
+                        as="button"
+                        onClick={()=>goTo('projects')}
+                        className="ds-star-cta"
+                        color="#86c9fc"
+                        trailColor="#7286ff"
+                        duration={3.8}
+                        thickness={1}
+                        radius={7}
+                        trailLength={0.27}
+                        stars={2}
+                        glow={0.45}
+                        sparkle
+                        hover="brighten"
+                        theme="dark"
+                        backgroundColor="#101b31"
+                        textColor="#e4f2ff"
+                        borderColor="#30466b"
+                      >
+                        EXPLORE REPOSITORIES <b>↘</b>
+                      </StarBorder>
+                    </ClickSpark>
+                  </Suspense>
+                  <Suspense fallback={<a href={GITHUB} target="_blank" rel="noreferrer" className="ds-secondary">GITHUB PROFILE ↗</a>}>
+                    <Magnet padding={42} magnetStrength={4} maxOffset={8} tilt={2.2} scale={1.025} wrapperClassName="ds-magnet-wrap" innerClassName="ds-magnet-inner">
+                      <a href={GITHUB} target="_blank" rel="noreferrer" className="ds-secondary">GITHUB PROFILE ↗</a>
+                    </Magnet>
+                  </Suspense>
+                </div>
+              ) : (
+                <div className="ds-actions">
+                  <button onClick={()=>goTo('projects')} className="ds-primary">EXPLORE REPOSITORIES <b>↘</b></button>
+                  <a href={GITHUB} target="_blank" rel="noreferrer" className="ds-secondary">GITHUB PROFILE ↗</a>
+                </div>
+              )}
+              {active ? (
+                <Suspense fallback={null}>
+                  <div className="ds-stat-strip" aria-label="Portfolio summary">
+                    <div className="ds-stat-card"><strong><CountUp to={projects.length} duration={1.7} suffix=""/></strong><span>SELECTED BUILDS</span></div>
+                    <div className="ds-stat-card"><strong><CountUp to={stacks.languages.length} duration={1.8} suffix=""/></strong><span>LANGUAGES</span></div>
+                    <div className="ds-stat-card"><strong><CountUp to={Object.keys(stacks).length} duration={1.9} suffix=""/></strong><span>STACK GROUPS</span></div>
+                  </div>
+                </Suspense>
+              ) : null}
               <div className="ds-thought">
                 <Suspense fallback={<span className="ds-loading">INDEXING PROFILE DATA...</span>}>
                   <ThoughtLine label="INDEXING LOCAL PROFILE DATA" doneLabel="PROFILE SNAPSHOT READY" glyph="dot" steps={['Profile README mapped','Selected repositories indexed','Technology stack categorized']} working={indexing} collapseOnSettle={false} showTimer={false} color="#9aaebe" glyphColor="#86c9fc" fontSize={11} shimmer settleDuration={420} className="ds-thought-line"/>
@@ -327,7 +412,24 @@ export default function DarkSidePortfolio({active = true}) {
             </div>
             <div className="ds-hero-visual">
               <div className="ds-pixel-orbit"><i/><i/><i/></div><div className="ds-code-tag">PROFILE OBJECT // TS</div>
-              <CodeWindow typing={typing} profileProgress={profileProgress}/>
+              {active ? (
+                <Suspense fallback={<CodeWindow typing={typing} profileProgress={profileProgress}/>}>
+                  <SpotlightCard
+                    className="ds-code-spotlight"
+                    spotlightColor="#86c9fc"
+                    intensity={0.23}
+                    spotlightSize={205}
+                    softness={0.72}
+                    proximity={65}
+                    smoothing={0.28}
+                    borderGlow={0.45}
+                    flare
+                    theme="dark"
+                  >
+                    <CodeWindow typing={typing} profileProgress={profileProgress}/>
+                  </SpotlightCard>
+                </Suspense>
+              ) : <CodeWindow typing={typing} profileProgress={profileProgress}/>}
               <div className="ds-sticker"><b>01</b><span>BUILD<br/>MODE</span><i>ON</i></div>
             </div>
           </section>
@@ -342,6 +444,29 @@ export default function DarkSidePortfolio({active = true}) {
             <div className="ds-tech-grid" key={stackGroup}>
               {stacks[stackGroup].map((item,i)=><div className="ds-tech-chip" key={item} style={{'--chip-index':i}}><i/>{item}</div>)}
             </div>
+            {active ? (
+              <Suspense fallback={null}>
+                <div className="ds-tech-loop-shell">
+                  <small>TECH STACK / DRAG OR HOVER TO EXPLORE</small>
+                  <LogoLoop
+                    logos={technologyLoopItems}
+                    speed={42}
+                    direction="left"
+                    logoHeight={24}
+                    gap={30}
+                    pauseOnHover
+                    fadeOut
+                    fadeOutWidth={0.08}
+                    scaleOnHover
+                    draggable={false}
+                    intro={false}
+                    ariaLabel="Technology stack"
+                    className="ds-tech-loop"
+                    style={{color:'#a9cfff'}}
+                  />
+                </div>
+              </Suspense>
+            ) : null}
             <p className="ds-stack-note"><b>package.json</b> // Familiar tools. New combinations. Constant iteration.</p>
           </section>
 
@@ -363,12 +488,56 @@ export default function DarkSidePortfolio({active = true}) {
 
           <section className="ds-section" id="ds-journey">
             <div className="ds-section-heading"><div><small><TypewriterText text="04 / BUILD.LOG" active={active} speed={42}/></small><h2><TypewriterText text="LEARNING IN PUBLIC" accentSuffix="_" active={active} speed={52} startDelay={420}/></h2></div><p><TypewriterText text="Curiosity moves between application development, data, automation, and intelligent tools." active={active} speed={24} startDelay={930}/></p></div>
-            <div className="ds-journey-grid">
-              <article><small>TRACK_01</small><h3>APPLICATIONS</h3><p>Building browser-based tools, productivity apps, and full-stack workspaces.</p><code>web / mobile / full-stack</code></article>
-              <article><small>TRACK_02</small><h3>AUTOMATION</h3><p>Reducing manual work through document processing, OCR, data transformation, and workflow automation.</p><code>ocr / extraction / workflow</code></article>
-              <article><small>TRACK_03</small><h3>AI EXPERIMENTS</h3><p>Exploring AI-assisted media workflows, transcript processing, computer vision, and useful integrations.</p><code>gemini / opencv / ai tools</code></article>
-            </div>
+            {active ? (
+              <Suspense fallback={<div className="ds-journey-grid">
+                <article><small>TRACK_01</small><h3>APPLICATIONS</h3><p>Building browser-based tools, productivity apps, and full-stack workspaces.</p><code>web / mobile / full-stack</code></article>
+                <article><small>TRACK_02</small><h3>AUTOMATION</h3><p>Reducing manual work through document processing, OCR, data transformation, and workflow automation.</p><code>ocr / extraction / workflow</code></article>
+                <article><small>TRACK_03</small><h3>AI EXPERIMENTS</h3><p>Exploring AI-assisted media workflows, transcript processing, computer vision, and useful integrations.</p><code>gemini / opencv / ai tools</code></article>
+              </div>}>
+                <AnimatedContent className="ds-journey-reveal" trigger="scroll" once distance={28} duration={0.78} blur={2} stagger={0.13} threshold={0.12}>
+                  <div className="ds-journey-grid">
+                    <GlareHover width="100%" height="100%" background="#0b141e" borderColor="#263d56" borderRadius="3px" glareColor="#86c9fc" glareOpacity={0.18} glareSize={25} softness={0.72} variant="sheen" className="ds-journey-glare">
+                      <article><small>TRACK_01</small><h3>APPLICATIONS</h3><p>Building browser-based tools, productivity apps, and full-stack workspaces.</p><code>web / mobile / full-stack</code></article>
+                    </GlareHover>
+                    <GlareHover width="100%" height="100%" background="#0b141e" borderColor="#263d56" borderRadius="3px" glareColor="#86c9fc" glareOpacity={0.18} glareSize={25} softness={0.72} variant="sheen" className="ds-journey-glare">
+                      <article><small>TRACK_02</small><h3>AUTOMATION</h3><p>Reducing manual work through document processing, OCR, data transformation, and workflow automation.</p><code>ocr / extraction / workflow</code></article>
+                    </GlareHover>
+                    <GlareHover width="100%" height="100%" background="#0b141e" borderColor="#263d56" borderRadius="3px" glareColor="#86c9fc" glareOpacity={0.18} glareSize={25} softness={0.72} variant="sheen" className="ds-journey-glare">
+                      <article><small>TRACK_03</small><h3>AI EXPERIMENTS</h3><p>Exploring AI-assisted media workflows, transcript processing, computer vision, and useful integrations.</p><code>gemini / opencv / ai tools</code></article>
+                    </GlareHover>
+                  </div>
+                </AnimatedContent>
+              </Suspense>
+            ) : (
+              <div className="ds-journey-grid" aria-hidden="true"/>
+            )}
             <div className="ds-build-prompt"><b>~/build.log $</b><span>{typing.area === 'journey' ? typing.text : ''}</span>{typing.area === 'journey' && typing.text && <i className="ds-caret"/>}</div>
+            {active && (
+              <Suspense fallback={null}>
+                <div className="ds-scroll-velocity-shell" aria-label="Build philosophy ticker">
+                  <small>DEVELOPMENT LOOP / CONTINUOUS</small>
+                  <ScrollVelocity
+                    texts={['BUILD / TEST / ITERATE', 'DOCUMENTS / AUTOMATION / AI']}
+                    velocity={34}
+                    damping={48}
+                    stiffness={360}
+                    numCopies={4}
+                    pauseOnHover
+                    fadeEdges
+                    skewWithVelocity={0.35}
+                    scaleWithVelocity={0.035}
+                    outlineAlternate
+                    gap={40}
+                    fontSize="clamp(13px, 1.7vw, 21px)"
+                    fontWeight={700}
+                    color="#86c9fc"
+                    className="ds-velocity-text"
+                    parallaxClassName="ds-velocity-parallax"
+                    scrollerClassName="ds-velocity-scroller"
+                  />
+                </div>
+              </Suspense>
+            )}
             <div className="ds-principle"><b>{'<>'}</b><div><strong>BUILD • LEARN • ITERATE</strong><p>Start with a problem. Build a working version. Test it. Improve the next one.</p></div><small>EOF</small></div>
           </section>
 

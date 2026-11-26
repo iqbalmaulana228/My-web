@@ -565,6 +565,75 @@ function Footer() {
 }
 
 export default function App() {
+  useEffect(() => {
+    const header = document.querySelector('.site-header');
+    let frame = 0;
+
+    const updateScrollState = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
+        document.documentElement.style.setProperty('--scroll-progress', `${progress * 100}%`);
+        header?.classList.toggle('is-scrolled', window.scrollY > 10);
+        frame = 0;
+      });
+    };
+
+    updateScrollState();
+    window.addEventListener('scroll', updateScrollState, { passive: true });
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+      return () => {
+        window.removeEventListener('scroll', updateScrollState);
+        if (frame) window.cancelAnimationFrame(frame);
+      };
+    }
+
+    const revealSelector = [
+      '.quick-facts .fact-item',
+      '.section-heading',
+      '.about-content',
+      '.about-flip-wrap',
+      '.timeline-item',
+      '.skill-carousel-panel',
+      '.skill-wheel-panel',
+      '.capability-card-shell',
+      '.skill-strip',
+      '.folder-card',
+      '.education-card',
+      '.flowing-explore-heading',
+      '.portfolio-flowing-menu',
+      '.contact-content > .eyebrow',
+      '.contact-content > h2',
+      '.contact-content > p',
+      '.contact-content > .button',
+      '.contact-foot',
+    ].join(', ');
+
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -36px 0px' });
+
+    document.querySelectorAll(revealSelector).forEach(node => {
+      const siblings = Array.from(node.parentElement?.children || []).filter(child => child.matches(revealSelector));
+      const siblingIndex = Math.max(0, siblings.indexOf(node));
+      node.style.setProperty('--motion-delay', `${Math.min(siblingIndex, 5) * 75}ms`);
+      node.classList.add('motion-reveal');
+      revealObserver.observe(node);
+    });
+
+    return () => {
+      window.removeEventListener('scroll', updateScrollState);
+      if (frame) window.cancelAnimationFrame(frame);
+      revealObserver.disconnect();
+    };
+  }, []);
+
   return (
     <>
       <Header />

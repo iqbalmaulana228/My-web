@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import Lanyard from './components/Lanyard.jsx';
-import SlingThemeButton from './components/SlingThemeButton.jsx';
+const SlingThemeButton = lazy(() => import('./components/SlingThemeButton.jsx'));
 
 const CircularCarousel = lazy(() => import('./components/reactbits/CircularCarousel.jsx'));
 const FlipCard = lazy(() => import('./components/reactbits/FlipCard.jsx'));
@@ -733,7 +733,7 @@ export default function App() {
         <Contact />
       </main>
       <Footer />
-      <SlingThemeButton isDark={isDark} onToggle={() => setIsDark(current => !current)} />
+      <Suspense fallback={null}><SlingThemeButton isDark={isDark} onToggle={() => setIsDark(current => !current)} /></Suspense>
     </>
   );
 }

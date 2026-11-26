@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import './DarkSidePortfolio.css';
 
 const BranchedMenu = lazy(() => import('./reactbits/BranchedMenu.jsx'));
@@ -55,19 +55,52 @@ function goTo(id) {
   document.getElementById('ds-' + id)?.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-function CodeWindow({typing}) {
-  const lines = [
-    <><span className="ds-purple">export const</span> <span className="ds-cyan">developer</span> = {'{'}</>,
-    <><span className="ds-key">  name:</span> <span className="ds-string">'Muhammad Iqbal Maulana'</span>,</>,
-    <><span className="ds-key">  github:</span> <span className="ds-string">'iqbalmaulana228'</span>,</>,
-    <><span className="ds-key">  role:</span> <span className="ds-string">'Informatics Engineering Student'</span>,</>,
-    <><span className="ds-key">  focus:</span> [<span className="ds-string">'Web Apps'</span>, <span className="ds-string">'Automation'</span>,</>,
-    <>           <span className="ds-string">'OCR'</span>, <span className="ds-string">'AI Workflows'</span>],</>,
-    <><span className="ds-key">  languages:</span> [<span className="ds-string">'JavaScript'</span>, <span className="ds-string">'TypeScript'</span>,</>,
-    <>               <span className="ds-string">'Python'</span>, <span className="ds-string">'C++'</span>, <span className="ds-string">'SQL'</span>],</>,
-    <><span className="ds-key">  motto:</span> <span className="ds-string">'Build • Learn • Iterate'</span></>,
-    <>{"}"};</>
-  ];
+const profileLines = [
+  {
+    text: 'export const developer = {',
+    content: <><span className="ds-purple">export const</span> <span className="ds-cyan">developer</span> = {'{'}</>
+  },
+  {
+    text: "  name: 'Muhammad Iqbal Maulana',",
+    content: <><span className="ds-key">  name:</span> <span className="ds-string">'Muhammad Iqbal Maulana'</span>,</>
+  },
+  {
+    text: "  github: 'iqbalmaulana228',",
+    content: <><span className="ds-key">  github:</span> <span className="ds-string">'iqbalmaulana228'</span>,</>
+  },
+  {
+    text: "  role: 'Informatics Engineering Student',",
+    content: <><span className="ds-key">  role:</span> <span className="ds-string">'Informatics Engineering Student'</span>,</>
+  },
+  {
+    text: "  focus: ['Web Apps', 'Automation',",
+    content: <><span className="ds-key">  focus:</span> [<span className="ds-string">'Web Apps'</span>, <span className="ds-string">'Automation'</span>,</>
+  },
+  {
+    text: "           'OCR', 'AI Workflows'],",
+    content: <>           <span className="ds-string">'OCR'</span>, <span className="ds-string">'AI Workflows'</span>],</>
+  },
+  {
+    text: "  languages: ['JavaScript', 'TypeScript',",
+    content: <><span className="ds-key">  languages:</span> [<span className="ds-string">'JavaScript'</span>, <span className="ds-string">'TypeScript'</span>,</>
+  },
+  {
+    text: "               'Python', 'C++', 'SQL'],",
+    content: <>               <span className="ds-string">'Python'</span>, <span className="ds-string">'C++'</span>, <span className="ds-string">'SQL'</span>],</>
+  },
+  {
+    text: "  motto: 'Build • Learn • Iterate'",
+    content: <><span className="ds-key">  motto:</span> <span className="ds-string">'Build • Learn • Iterate'</span></>
+  },
+  {
+    text: '};',
+    content: <>{"}"};</>
+  }
+];
+const profileText = profileLines.map(line => line.text).join('\n');
+
+function CodeWindow({typing, profileProgress}) {
+  let offset = 0;
   return (
     <div className="ds-code-window">
       <div className="ds-window-bar">
@@ -75,9 +108,21 @@ function CodeWindow({typing}) {
         <span>profile.ts</span><span className="ds-read-only">READ ONLY</span>
       </div>
       <div className="ds-code-content">
-        {lines.map((line,i)=><div className="ds-code-line" key={i} style={{'--line-index':i}}>
-          <span className="ds-line-number">{String(i+1).padStart(2,'0')}</span><code>{line}</code>
-        </div>)}
+        {profileLines.map((line,i)=>{
+          const lineStart = offset;
+          const visible = Math.min(line.text.length, Math.max(0, profileProgress - lineStart));
+          const isTypingLine = profileProgress >= lineStart && profileProgress < lineStart + line.text.length;
+          offset += line.text.length + (i < profileLines.length - 1 ? 1 : 0);
+          return (
+            <div className="ds-code-line" key={i}>
+              <span className="ds-line-number">{String(i+1).padStart(2,'0')}</span>
+              <span className="ds-code-typing-clip" style={{width:`${visible + (isTypingLine ? 1 : 0)}ch`}}>
+                <code>{line.content}</code>
+                {isTypingLine && <i className="ds-profile-caret"/>}
+              </span>
+            </div>
+          );
+        })}
       </div>
       <div className="ds-code-terminal"><b>iqbal@github:~$</b><span>{typing.area === 'code' ? typing.text : ''}</span>{typing.area === 'code' && typing.text && <i className="ds-caret"/>}</div>
     </div>
@@ -86,6 +131,8 @@ function CodeWindow({typing}) {
 
 export default function DarkSidePortfolio({active = true}) {
   const [typing,setTyping]=useState({area:'',text:''});
+  const [profileProgress,setProfileProgress]=useState(0);
+  const profileProgressRef=useRef(0);
   const [indexing,setIndexing]=useState(true);
   const [stackGroup,setStackGroup]=useState('languages');
   const [selected,setSelected]=useState(null);
@@ -99,13 +146,14 @@ export default function DarkSidePortfolio({active = true}) {
       {area:'journey',text:'build -> test -> iterate'}
     ];
     let sequenceIndex=0,position=0,deleting=false,timer;
-    const tick=()=>{
+
+    const tickSequence=()=>{
       const current=sequence[sequenceIndex];
       if(!deleting){
         position=Math.min(position+1,current.text.length);
         setTyping({area:current.area,text:current.text.slice(0,position)});
-        if(position===current.text.length){deleting=true;timer=setTimeout(tick,1900);return;}
-        timer=setTimeout(tick,78);
+        if(position===current.text.length){deleting=true;timer=setTimeout(tickSequence,1900);return;}
+        timer=setTimeout(tickSequence,78);
         return;
       }
       position=Math.max(0,position-1);
@@ -113,12 +161,31 @@ export default function DarkSidePortfolio({active = true}) {
       if(position===0){
         deleting=false;
         sequenceIndex=(sequenceIndex+1)%sequence.length;
-        timer=setTimeout(tick,1050);
+        timer=setTimeout(tickSequence,1050);
         return;
       }
-      timer=setTimeout(tick,38);
+      timer=setTimeout(tickSequence,38);
     };
-    timer=setTimeout(tick,700);
+
+    const typeProfile=()=>{
+      const currentProgress=profileProgressRef.current;
+      if(currentProgress>=profileText.length){
+        timer=setTimeout(tickSequence,1400);
+        return;
+      }
+      const nextProgress=currentProgress+1;
+      profileProgressRef.current=nextProgress;
+      setProfileProgress(nextProgress);
+      const typedCharacter=profileText[currentProgress];
+      timer=setTimeout(typeProfile,typedCharacter==='\n'?380:42);
+    };
+
+    if(profileProgressRef.current<profileText.length){
+      setTyping({area:'',text:''});
+      timer=setTimeout(typeProfile,650);
+    }else{
+      timer=setTimeout(tickSequence,700);
+    }
     return ()=>clearTimeout(timer);
   },[active]);
 
@@ -191,7 +258,7 @@ export default function DarkSidePortfolio({active = true}) {
             </div>
             <div className="ds-hero-visual">
               <div className="ds-pixel-orbit"><i/><i/><i/></div><div className="ds-code-tag">PROFILE OBJECT // TS</div>
-              <CodeWindow typing={typing}/>
+              <CodeWindow typing={typing} profileProgress={profileProgress}/>
               <div className="ds-sticker"><b>01</b><span>BUILD<br/>MODE</span><i>ON</i></div>
             </div>
           </section>

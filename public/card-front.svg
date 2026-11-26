@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1440" viewBox="0 0 1024 1440">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#1c16a8"/><stop offset="1" stop-color="#0b075f"/></linearGradient>
+    <pattern id="grid" width="42" height="42" patternUnits="userSpaceOnUse"><path d="M42 0H0V42" fill="none" stroke="#86C9FC" stroke-opacity=".12" stroke-width="1"/></pattern>
+  </defs>
+  <rect width="1024" height="1440" rx="34" fill="url(#bg)"/>
+  <rect width="1024" height="1440" fill="url(#grid)"/>
+  <path d="M0 0h1024v300L0 500z" fill="#fff" opacity=".045"/>
+  <rect x="72" y="80" width="880" height="8" rx="4" fill="#FFC72C"/>
+  <text x="80" y="170" fill="#86C9FC" font-family="Arial,sans-serif" font-size="30" font-weight="700" letter-spacing="8">PERSONAL PORTFOLIO</text>
+  <text x="80" y="270" fill="#fff" font-family="Arial,sans-serif" font-size="52" font-weight="700" letter-spacing="2">MUHAMMAD IQBAL</text>
+  <text x="80" y="340" fill="#fff" font-family="Arial,sans-serif" font-size="52" font-weight="700" letter-spacing="2">MAULANA</text>
+  <rect x="80" y="420" width="330" height="330" rx="38" fill="#fff" fill-opacity=".1" stroke="#86C9FC" stroke-opacity=".55" stroke-width="3"/>
+  <text x="245" y="635" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="160" font-weight="700">IM</text>
+  <rect x="80" y="830" width="864" height="3" fill="#86C9FC" opacity=".6"/>
+  <text x="80" y="920" fill="#FFC72C" font-family="Arial,sans-serif" font-size="31" font-weight="700" letter-spacing="5">DOCUMENT CENTER · TAX</text>
+  <text x="80" y="990" fill="#fff" font-family="Arial,sans-serif" font-size="42" font-weight="600">Finance Operations</text>
+  <text x="80" y="1060" fill="#dbeafe" font-family="Arial,sans-serif" font-size="32">Teknik Informatika</text>
+  <text x="80" y="1270" fill="#86C9FC" font-family="Arial,sans-serif" font-size="25" letter-spacing="5">Cikarang · West Java · Indonesia</text>
+  <text x="80" y="1340" fill="#fff" opacity=".72" font-family="Arial,sans-serif" font-size="21" letter-spacing="4">DIGITAL PROFILE CARD · NOT AN EMPLOYEE ID</text>
+</svg>

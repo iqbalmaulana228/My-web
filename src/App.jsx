@@ -6,6 +6,7 @@ const SpotlightCard = lazy(() => import('./components/reactbits/SpotlightCard.js
 const FlipCard = lazy(() => import('./components/reactbits/FlipCard.jsx'));
 const Folder = lazy(() => import('./components/reactbits/Folder.jsx'));
 const OptionWheel = lazy(() => import('./components/reactbits/OptionWheel.jsx'));
+const FlowingMenu = lazy(() => import('./components/reactbits/FlowingMenu.jsx'));
 
 const profileUrl = 'https://www.linkedin.com/in/muhammad-iqbal-maulana228';
 
@@ -299,22 +300,24 @@ function Experience() {
     <section className="section experience-section" id="experience">
       <div className="section-inner">
         <div className="experience-top">
-          <SectionHeading kicker="02 / EXPERIENCE" title="Experience that compounds." description="Perjalanan profesional di lingkungan industri, document center, dan pengembangan teknologi." />
-          <div className="experience-years"><strong>2022</strong><span>—</span><strong>NOW</strong><small>PROFESSIONAL JOURNEY</small></div>
+          <SectionHeading kicker="02 / EXPERIENCE" title="Experience that compounds." description="Perjalanan dari operasional dokumen hingga sinergi Tax, dengan fondasi teknologi yang terus berkembang." />
+          <div className="experience-years"><strong>2021</strong><span>—</span><strong>NOW</strong><small>PROFESSIONAL TIMELINE</small></div>
         </div>
-        <div className="timeline">
-          {experiences.map((item, index) => (
-            <article className={`timeline-item${item.current ? ' current' : ''}`} key={item.role}>
-              <div className="timeline-marker"><span>{String(index + 1).padStart(2, '0')}</span><i /></div>
-              <div className="timeline-period">{item.period}</div>
-              <div className="timeline-detail">
-                <div className="role-heading"><h3>{item.role}</h3>{item.current && <span className="current-badge">CURRENT</span>}</div>
-                <p className="timeline-company">{item.company}</p>
-                <span className="timeline-type">{item.type}</span>
-                <p className="timeline-description">{item.detail}</p>
-              </div>
-            </article>
-          ))}
+        <div className="timeline-scroll" aria-label="Timeline pengalaman profesional">
+          <div className="timeline">
+            {experiences.slice().reverse().map((item, index) => (
+              <article className={`timeline-item${item.current ? ' current' : ''}`} key={item.role}>
+                <div className="timeline-marker"><span>{String(index + 1).padStart(2, '0')}</span></div>
+                <div className="timeline-period">{item.period}</div>
+                <div className="timeline-detail">
+                  <div className="role-heading"><h3>{item.role}</h3>{item.current && <span className="current-badge">CURRENT</span>}</div>
+                  <p className="timeline-company">{item.company}</p>
+                  <span className="timeline-type">{item.type}</span>
+                  <p className="timeline-description">{item.detail}</p>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -416,12 +419,62 @@ function Education() {
   );
 }
 
+
+function ExploreMenu() {
+  const items = [
+    { text: 'Experience', link: '#experience', meta: '2021 — NOW', marquee: 'DOCUMENT CENTER · TAX COORDINATION', image: skillArtwork[1].src },
+    { text: 'Capabilities', link: '#skills', meta: 'OPS + IT', marquee: 'DATA · REPORTING · PROCESS IMPROVEMENT', image: skillArtwork[0].src },
+    { text: 'Work files', link: '#files', meta: 'SELECTED WORK', marquee: 'INVOICE WORKFLOW · IOT · SOFTWARE ANALYSIS', image: skillArtwork[3].src },
+    { text: 'Education', link: '#education', meta: 'ACADEMIC', marquee: 'INFORMATICS ENGINEERING · CONTINUOUS LEARNING', image: skillArtwork[6].src },
+  ];
+
+  return (
+    <section className="section flowing-explore-section" id="explore">
+      <div className="section-inner">
+        <div className="flowing-explore-heading">
+          <div>
+            <span className="eyebrow"><i /> 06 / EXPLORE</span>
+            <h2>Explore the portfolio.</h2>
+          </div>
+          <p>Pengalaman, kemampuan, dan perjalanan belajar dalam satu alur.</p>
+        </div>
+        <Deferred minHeight={390}>
+          <Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 390 }} />}>
+            <FlowingMenu
+              items={items}
+              speed={86}
+              direction="alternate"
+              followCursor={0.35}
+              duration={0.48}
+              stretch={0.68}
+              magnet={0.25}
+              textColor="#ffffff"
+              bgColor="#0e1271"
+              marqueeBgColor="#ffc72c"
+              marqueeTextColor="#0e1271"
+              borderColor="rgba(255,255,255,0.16)"
+              dividers
+              dimInactive
+              align="left"
+              showIndex
+              showArrow
+              imageShape="rounded"
+              className="portfolio-flowing-menu"
+              ariaLabel="Explore portfolio sections"
+            />
+          </Suspense>
+        </Deferred>
+      </div>
+    </section>
+  );
+}
+
 function Contact() {
   return (
     <section className="contact-section" id="contact">
       <div className="contact-grid" />
       <div className="section-inner contact-content">
-        <span className="eyebrow"><i /> 05 / CONTACT</span>
+        <span className="eyebrow"><i /> 07 / CONTACT</span>
         <h2>Let’s make work <em>flow better.</em></h2>
         <p>Terbuka untuk terhubung, bertukar pengalaman, dan menjajaki peluang profesional yang relevan.</p>
         <a className="button button-yellow" href={profileUrl} target="_blank" rel="noreferrer">Connect on LinkedIn <Icon name="external" size={16} /></a>
@@ -447,6 +500,7 @@ export default function App() {
         <Skills />
         <WorkFiles />
         <Education />
+        <ExploreMenu />
         <Contact />
       </main>
       <Footer />

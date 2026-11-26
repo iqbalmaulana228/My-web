@@ -2,11 +2,11 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import Lanyard from './components/Lanyard.jsx';
 
 const CircularCarousel = lazy(() => import('./components/reactbits/CircularCarousel.jsx'));
-const SpotlightCard = lazy(() => import('./components/reactbits/SpotlightCard.jsx'));
 const FlipCard = lazy(() => import('./components/reactbits/FlipCard.jsx'));
 const Folder = lazy(() => import('./components/reactbits/Folder.jsx'));
 const OptionWheel = lazy(() => import('./components/reactbits/OptionWheel.jsx'));
 const FlowingMenu = lazy(() => import('./components/reactbits/FlowingMenu.jsx'));
+const TiltedCard = lazy(() => import('./components/reactbits/TiltedCard.jsx'));
 
 const profileUrl = 'https://www.linkedin.com/in/muhammad-iqbal-maulana228';
 
@@ -272,23 +272,7 @@ function About() {
             </Deferred>
           </div>
         </div>
-        <div className="spotlight-grid">
-          <Deferred minHeight={190}><Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 190 }} />}>
-            <SpotlightCard theme="light" spotlightColor="#140a9a" intensity={0.18} spotlightSize={250} borderGlow={0.42} proximity={90} className="spotlight-profile-card">
-              <div className="spotlight-card-content"><span className="spotlight-index">01 / EXPERIENCE</span><strong className="spotlight-stat">4 yrs 6 mos</strong><h3>Komatsu Indonesia</h3><p>Perjalanan profesional di Document Center dan sinergi Tax.</p></div>
-            </SpotlightCard>
-          </Suspense></Deferred>
-          <Deferred minHeight={190}><Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 190 }} />}>
-            <SpotlightCard theme="light" spotlightColor="#0e1271" intensity={0.16} spotlightSize={250} borderGlow={0.38} proximity={90} className="spotlight-profile-card">
-              <div className="spotlight-card-content"><span className="spotlight-index">02 / OPERATIONS</span><strong className="spotlight-stat">Tax + Document</strong><h3>Operational synergy</h3><p>Dokumen, data, invoice, dan koordinasi lintas departemen.</p></div>
-            </SpotlightCard>
-          </Suspense></Deferred>
-          <Deferred minHeight={190}><Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 190 }} />}>
-            <SpotlightCard theme="light" spotlightColor="#0e1271" intensity={0.15} spotlightSize={250} borderGlow={0.38} proximity={90} className="spotlight-profile-card">
-              <div className="spotlight-card-content"><span className="spotlight-index">03 / LEARNING</span><strong className="spotlight-stat">IT foundation</strong><h3>Informatics engineering</h3><p>IoT Smart Watering, Arduino, Flutter seminar, dan software analysis.</p></div>
-            </SpotlightCard>
-          </Suspense></Deferred>
-        </div>
+
       </div>
     </section>
   );
@@ -351,7 +335,40 @@ function Skills() {
         </div>
         <div className="capability-grid">
           {capabilities.map(([title, description], index) => (
-            <article className="capability-card" key={title}><span className="capability-number">{String(index + 1).padStart(2, '0')}</span><span className="capability-rule" /><h3>{title}</h3><p>{description}</p></article>
+            <article className="capability-card-shell" key={title}>
+              <Deferred minHeight={230}>
+                <Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 230 }} />}>
+                  <TiltedCard
+                    containerWidth="100%"
+                    containerHeight="220px"
+                    imageWidth="100%"
+                    imageHeight="220px"
+                    rotateAmplitude={7}
+                    scaleOnHover={1.035}
+                    showTooltip={false}
+                    glare={0.28}
+                    glareColor="#86c9fc"
+                    shadow={0.24}
+                    radius={6}
+                    introDelay={index * 75}
+                    className="capability-tilted-card"
+                    style={{ '--capability-accent': ['#86c9fc', '#ffc72c', '#ee3124', '#86c9fc', '#ffc72c', '#ee3124'][index] }}
+                  >
+                    <div className="capability-tilted-content">
+                      <div className="capability-tilted-head">
+                        <span>{String(index + 1).padStart(2, '0')}</span>
+                        <small>CAPABILITY / 0{index + 1}</small>
+                      </div>
+                      <div className="capability-tilted-copy">
+                        <h3>{title}</h3>
+                        <p>{description}</p>
+                      </div>
+                      <span className="capability-tilted-rule" />
+                    </div>
+                  </TiltedCard>
+                </Suspense>
+              </Deferred>
+            </article>
           ))}
         </div>
         <div className="skill-strip"><span className="skill-strip-label">SKILL SET</span><div className="skill-chips">{skills.map(skill => <span key={skill}>{skill}</span>)}</div></div>

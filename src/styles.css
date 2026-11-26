@@ -124,12 +124,6 @@ button { font: inherit; }
 .timeline-description { max-width: 780px; margin: 14px 0 0; color: #64748b; font-size: 12px; line-height: 1.9; }
 
 .skills-section { background: var(--surface); }
-.capability-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 48px; background: #dfe6ef; border: 1px solid #dfe6ef; }
-.capability-card { min-height: 190px; padding: 26px 26px 28px; background: #fff; }
-.capability-number { color: #9aa8ba; font: 800 10px Manrope, sans-serif; }
-.capability-rule { display: block; width: 32px; height: 3px; background: var(--yellow); margin: 19px 0 16px; }
-.capability-card h3 { margin: 0 0 9px; color: var(--blue-deep); font: 800 16px Manrope, sans-serif; letter-spacing: -.4px; }
-.capability-card p { margin: 0; color: #64748b; font-size: 11px; line-height: 1.8; }
 .skill-strip { display: grid; grid-template-columns: 120px 1fr; gap: 22px; margin-top: 35px; align-items: start; }
 .skill-strip-label { color: #64748b; font: 800 9px Manrope, sans-serif; letter-spacing: 1.5px; padding-top: 10px; }
 .skill-chips { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -217,10 +211,6 @@ button { font: inherit; }
   .timeline-period { padding: 1px 0 0; font-size: 10px; }
   .timeline-detail { grid-column: 2; padding-bottom: 23px; }
   .role-heading h3 { font-size: 15px; }
-  .capability-grid { grid-template-columns: 1fr 1fr; }
-  .capability-card { min-height: 170px; padding: 20px 17px; }
-  .capability-card h3 { font-size: 14px; }
-  .capability-card p { font-size: 10px; }
   .skill-strip { grid-template-columns: 1fr; gap: 12px; }
   .skill-strip-label { padding: 0; }
   .education-card { grid-template-columns: 45px 1fr 14px; gap: 13px; padding: 18px 14px; }
@@ -241,8 +231,6 @@ button { font: inherit; }
   .button { justify-content: center; }
   .hero-visual { min-height: 420px; }
   .lanyard-stage { height: 440px; }
-  .capability-grid { grid-template-columns: 1fr; }
-  .capability-card { min-height: auto; }
   .experience-years { flex-wrap: wrap; }
   .experience-years small { width: 100%; margin: 4px 0 0; }
 }
@@ -292,13 +280,6 @@ button { font: inherit; }
 .flip-back-tags span { padding: 7px 9px; color: var(--blue-deep); background: #e8edff; font: 700 9px Manrope, sans-serif; }
 .profile-flip-back .flip-card-hint { margin-top: auto; border-color: #dbe3ef; color: #64748b; }
 
-.spotlight-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 54px; }
-.spotlight-profile-card { min-height: 195px; padding: 23px; border: 1px solid #e2e8f0; border-radius: 5px; }
-.spotlight-profile-card .spotlight-card-content { position: relative; z-index: 2; }
-.spotlight-index { display: block; color: #94a3b8; font: 800 8px Manrope, sans-serif; letter-spacing: 1.7px; }
-.spotlight-stat { display: block; margin: 20px 0 10px; color: var(--blue); font: 800 clamp(23px, 2.2vw, 31px)/1.1 Manrope, sans-serif; letter-spacing: -1.2px; }
-.spotlight-profile-card h3 { margin: 0 0 7px; color: var(--blue-deep); font: 800 13px Manrope, sans-serif; }
-.spotlight-profile-card p { margin: 0; color: #64748b; font-size: 10px; line-height: 1.7; }
 
 .deferred-mount { width: 100%; min-width: 0; }
 .deferred-placeholder {
@@ -349,8 +330,6 @@ button { font: inherit; }
 @media (max-width: 760px) {
   .about-layout { grid-template-columns: 1fr; gap: 18px; }
   .about-flip-wrap { grid-column: auto; max-width: 360px; width: 100%; margin: 12px auto 0; }
-  .spotlight-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 34px; }
-  .spotlight-profile-card { min-height: 175px; }
   .skills-showcase-grid { grid-template-columns: 1fr; gap: 12px; }
   .skill-carousel-panel, .skill-wheel-panel { padding: 17px 14px; }
   .interaction-panel-heading h3 { font-size: 16px; }
@@ -362,7 +341,6 @@ button { font: inherit; }
   .option-wheel-stage { height: 325px; }
 }
 @media (max-width: 420px) {
-  .spotlight-profile-card { padding: 19px; }
   .skill-carousel-panel { padding: 15px 10px; }
   .files-aside-note { font-size: 7px; }
   .folder-card-head h3 { font-size: 15px; }
@@ -548,4 +526,97 @@ button { font: inherit; }
     opacity: 0.35;
     transform: none;
   }
+}
+
+
+/* React Bits Tilted Cards for capability highlights */
+.capability-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 48px;
+}
+.capability-card-shell { min-width: 0; }
+.capability-tilted-card { width: 100%; height: 220px; overflow: visible; }
+.capability-tilted-card .tilted-card__body,
+.capability-tilted-card .tilted-card__shadow {
+  width: 100% !important;
+  height: 100% !important;
+}
+.capability-tilted-card .tilted-card__front {
+  color: #fff;
+  background:
+    radial-gradient(circle at 88% 13%, color-mix(in srgb, var(--capability-accent) 36%, transparent), transparent 34%),
+    linear-gradient(145deg, #140a9a 0%, #0e1271 70%, #09094d 100%);
+}
+.capability-tilted-card .tilted-card__front::after {
+  content: '';
+  position: absolute;
+  top: -68px;
+  right: -52px;
+  width: 205px;
+  height: 205px;
+  border: 1px solid #ffffff38;
+  border-radius: 50%;
+  box-shadow: 0 0 0 22px #ffffff0c, 0 0 0 48px #ffffff08;
+  pointer-events: none;
+}
+.capability-tilted-content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 22px;
+  color: #fff;
+}
+.capability-tilted-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.capability-tilted-head > span {
+  color: var(--yellow);
+  font: 800 26px/1 Manrope, sans-serif;
+  letter-spacing: -1px;
+}
+.capability-tilted-head small {
+  color: #ffffff80;
+  font: 800 8px Manrope, sans-serif;
+  letter-spacing: 1.6px;
+}
+.capability-tilted-copy h3 {
+  max-width: 260px;
+  margin: 0 0 10px;
+  color: #fff;
+  font: 800 18px/1.2 Manrope, sans-serif;
+  letter-spacing: -.45px;
+}
+.capability-tilted-copy p {
+  max-width: 300px;
+  margin: 0;
+  color: #dbeafe;
+  font-size: 11px;
+  line-height: 1.75;
+}
+.capability-tilted-rule {
+  display: block;
+  width: 38px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--capability-accent, var(--yellow));
+}
+@media (max-width: 760px) {
+  .capability-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .capability-tilted-card { height: 225px; }
+  .capability-tilted-content { padding: 17px; }
+  .capability-tilted-copy h3 { font-size: 15px; }
+  .capability-tilted-copy p { font-size: 10px; }
+}
+@media (max-width: 480px) {
+  .capability-grid { grid-template-columns: 1fr; gap: 14px; }
+  .capability-tilted-card { height: 205px; }
+  .capability-tilted-content { padding: 20px; }
 }

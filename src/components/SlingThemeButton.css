@@ -1,0 +1,45 @@
+.theme-switcher-dock {
+  position: fixed;
+  z-index: 120;
+  right: 28px;
+  bottom: 28px;
+  display: grid;
+  place-items: center;
+}
+.theme-switcher-hint {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 12px);
+  padding: 7px 10px;
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 999px;
+  background: var(--surface, #fff);
+  color: var(--text-muted, #64748b);
+  font: 700 9px/1 Manrope, sans-serif;
+  letter-spacing: 1.2px;
+  white-space: nowrap;
+  opacity: .78;
+  pointer-events: none;
+}
+.theme-switcher-sling .sling-button__pad {
+  outline: none;
+}
+.theme-switcher-sling .sling-button__pad:focus-visible {
+  outline: 3px solid #86c9fc;
+  outline-offset: 6px;
+}
+.theme-switcher-sling .sling-button__icon {
+  width: 25px;
+  height: 25px;
+}
+.theme-switcher-sling .sling-button__icon svg {
+  width: 100%;
+  height: 100%;
+}
+@media (max-width: 760px) {
+  .theme-switcher-dock { right: 18px; bottom: 18px; }
+  .theme-switcher-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-switcher-hint { transition: none; }
+}

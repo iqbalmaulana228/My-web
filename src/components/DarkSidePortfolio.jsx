@@ -84,7 +84,7 @@ function CodeWindow({typing}) {
   );
 }
 
-export default function DarkSidePortfolio() {
+export default function DarkSidePortfolio({active = true}) {
   const [typing,setTyping]=useState({area:'',text:''});
   const [indexing,setIndexing]=useState(true);
   const [stackGroup,setStackGroup]=useState('languages');
@@ -92,6 +92,7 @@ export default function DarkSidePortfolio() {
   const [output,setOutput]=useState('Type /help and press Enter to inspect available commands.');
 
   useEffect(()=>{
+    if(!active) return undefined;
     const sequence=[
       {area:'hero',text:'I build tools that solve real problems.'},
       {area:'code',text:'git status --short'},
@@ -119,9 +120,14 @@ export default function DarkSidePortfolio() {
     };
     timer=setTimeout(tick,700);
     return ()=>clearTimeout(timer);
-  },[]);
+  },[active]);
 
-  useEffect(()=>{const timer=setTimeout(()=>setIndexing(false),1700);return ()=>clearTimeout(timer);},[]);
+  useEffect(()=>{
+    if(!active) return undefined;
+    setIndexing(true);
+    const timer=setTimeout(()=>setIndexing(false),1700);
+    return ()=>clearTimeout(timer);
+  },[active]);
 
   const chooseMenu=value=>{
     if(value==='github'){window.open(GITHUB,'_blank','noopener,noreferrer');return;}

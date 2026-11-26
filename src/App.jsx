@@ -637,6 +637,8 @@ function Footer() {
 
 export default function App() {
   const [isDark, setIsDark] = useState(readSavedTheme);
+  const [hasSeenLightSide, setHasSeenLightSide] = useState(() => !readSavedTheme());
+  const [hasSeenDarkSide, setHasSeenDarkSide] = useState(readSavedTheme);
 
   useEffect(() => {
     const theme = isDark ? 'dark' : 'light';
@@ -654,7 +656,7 @@ export default function App() {
   }, [isDark]);
 
   useEffect(() => {
-    if (isDark) return undefined;
+    if (!hasSeenLightSide) return undefined;
     const header = document.querySelector('.site-header');
     let frame = 0;
 
@@ -721,33 +723,42 @@ export default function App() {
       if (frame) window.cancelAnimationFrame(frame);
       revealObserver.disconnect();
     };
-  }, [isDark]);
+  }, [hasSeenLightSide]);
+
+  const toggleSide = () => {
+    if (isDark) setHasSeenLightSide(true);
+    else setHasSeenDarkSide(true);
+    setIsDark(current => !current);
+  };
 
   return (
     <>
-      {isDark ? (
-        <Suspense fallback={<div className="dark-side-loading">BOOTING ALTERNATE PROFILE...</div>}>
-          <DarkSidePortfolio />
-        </Suspense>
-      ) : (
-        <>
+      {hasSeenLightSide && (
+        <div className="portfolio-side-cache" hidden={isDark}>
           <Header isDark={false} />
-      <main>
-        <Hero />
-        <QuickFacts />
-        <About />
-        <Experience />
-        <Skills isDark={isDark} />
-        <WorkFiles />
-        <Education />
-        <ExploreMenu isDark={isDark} />
-        <Contact />
-      </main>
-      <Footer />
-        </>
+          <main>
+            <Hero />
+            <QuickFacts />
+            <About />
+            <Experience />
+            <Skills isDark={false} />
+            <WorkFiles />
+            <Education />
+            <ExploreMenu isDark={false} />
+            <Contact />
+          </main>
+          <Footer />
+        </div>
+      )}
+      {hasSeenDarkSide && (
+        <div className="portfolio-side-cache" hidden={!isDark}>
+          <Suspense fallback={<div className="dark-side-loading">BOOTING ALTERNATE PROFILE...</div>}>
+            <DarkSidePortfolio active={isDark} />
+          </Suspense>
+        </div>
       )}
       <Suspense fallback={null}>
-        <SlingThemeButton isDark={isDark} onToggle={() => setIsDark(current => !current)} />
+        <SlingThemeButton isDark={isDark} onToggle={toggleSide} />
       </Suspense>
     </>
   );

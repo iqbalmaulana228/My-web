@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import Lanyard from './components/Lanyard.jsx';
 const SlingThemeButton = lazy(() => import('./components/SlingThemeButton.jsx'));
+const DarkSidePortfolio = lazy(() => import('./components/DarkSidePortfolio.jsx'));
 
 const CircularCarousel = lazy(() => import('./components/reactbits/CircularCarousel.jsx'));
 const FlipCard = lazy(() => import('./components/reactbits/FlipCard.jsx'));
@@ -13,7 +14,7 @@ const TrueFocus = lazy(() => import('./components/reactbits/TrueFocus.jsx'));
 const VariableProximity = lazy(() => import('./components/reactbits/VariableProximity.jsx'));
 const TiltedCard = lazy(() => import('./components/reactbits/TiltedCard.jsx'));
 
-const THEME_STORAGE_KEY = 'iqbal-portfolio-theme';
+const THEME_STORAGE_KEY = 'iqbal-portfolio-side';
 const profileUrl = 'https://www.linkedin.com/in/muhammad-iqbal-maulana228';
 
 function readSavedTheme() {
@@ -641,7 +642,10 @@ export default function App() {
     const theme = isDark ? 'dark' : 'light';
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isDark ? '#0b1120' : '#140A9A');
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isDark ? '#070b11' : '#140A9A');
+    document.body.dataset.portfolioSide = isDark ? 'dark-side' : 'professional';
+    document.title = isDark ? 'iqbal.exe | Dark Side Portfolio' : 'Muhammad Iqbal Maulana | Professional Portfolio';
+    window.scrollTo(0, 0);
     try {
       window.localStorage.setItem(THEME_STORAGE_KEY, theme);
     } catch {
@@ -650,6 +654,7 @@ export default function App() {
   }, [isDark]);
 
   useEffect(() => {
+    if (isDark) return undefined;
     const header = document.querySelector('.site-header');
     let frame = 0;
 
@@ -716,11 +721,17 @@ export default function App() {
       if (frame) window.cancelAnimationFrame(frame);
       revealObserver.disconnect();
     };
-  }, []);
+  }, [isDark]);
 
   return (
     <>
-      <Header isDark={isDark} />
+      {isDark ? (
+        <Suspense fallback={<div className="dark-side-loading">BOOTING ALTERNATE PROFILE...</div>}>
+          <DarkSidePortfolio />
+        </Suspense>
+      ) : (
+        <>
+          <Header isDark={false} />
       <main>
         <Hero />
         <QuickFacts />
@@ -733,7 +744,11 @@ export default function App() {
         <Contact />
       </main>
       <Footer />
-      <Suspense fallback={null}><SlingThemeButton isDark={isDark} onToggle={() => setIsDark(current => !current)} /></Suspense>
+        </>
+      )}
+      <Suspense fallback={null}>
+        <SlingThemeButton isDark={isDark} onToggle={() => setIsDark(current => !current)} />
+      </Suspense>
     </>
   );
 }

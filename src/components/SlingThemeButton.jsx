@@ -22,7 +22,7 @@ function MoonIcon() {
 export default function SlingThemeButton({ isDark, onToggle }) {
   return (
     <div className="theme-switcher-dock">
-      <span className="theme-switcher-hint" aria-hidden="true">PULL TO SWITCH</span>
+      <span className="theme-switcher-hint" aria-hidden="true">{isDark ? 'RETURN TO LIGHT SIDE' : 'ENTER DARK SIDE'}</span>
       <SlingButton
         onSend={onToggle}
         padColor={isDark ? '#17243c' : '#f5f5f5'}

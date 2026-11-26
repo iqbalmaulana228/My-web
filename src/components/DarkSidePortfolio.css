@@ -54,3 +54,32 @@ position:relative;isolation:isolate;min-height:100vh;overflow:clip;color:var(--t
 .ds-build-prompt{display:flex;align-items:center;gap:9px;min-height:42px;margin:16px 0 0;padding:9px 12px;border:1px solid #26385d;background:#0a1222;color:#c9dcff;font-size:10px}
 .ds-build-prompt b{color:#86c9fc;font-weight:600}
 .ds-build-prompt .ds-caret{width:6px;height:12px}
+
+
+/* Character-by-character reveal for the profile.ts editor */
+.ds-code-line {
+  opacity: 1;
+  animation: none;
+}
+.ds-code-typing-clip {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: 1.65em;
+  overflow: hidden;
+  white-space: pre;
+}
+.ds-code-typing-clip code {
+  display: block;
+  flex: none;
+  white-space: pre;
+}
+.ds-profile-caret {
+  display: inline-block;
+  flex: none;
+  width: 6px;
+  height: 12px;
+  margin-left: 1px;
+  background: var(--blue);
+  animation: ds-blink 1s steps(2,start) infinite;
+}

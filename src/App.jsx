@@ -650,7 +650,7 @@ function Footer() {
   return <footer className="site-footer"><div className="section-inner"><a className="footer-brand" href="#top">IM<span>.</span></a><p>© {new Date().getFullYear()} Muhammad Iqbal Maulana. Built with purpose.</p><a href={profileUrl} target="_blank" rel="noreferrer">LinkedIn <Icon name="external" size={13} /></a></div></footer>;
 }
 
-function setupSnakeTimeline(root) {
+function setupSnakeTimeline(root, reducedMotion = false) {
   const timeline = root.querySelector('.timeline');
   const svg = timeline?.querySelector('.timeline-snake');
   const track = timeline?.querySelector('.timeline-snake-track');
@@ -705,6 +705,11 @@ function setupSnakeTimeline(root) {
   };
 
   drawPath();
+  if (reducedMotion) {
+    progress.style.strokeDashoffset = '0';
+    return () => {};
+  }
+
   const trigger = ScrollTrigger.create({
     trigger: timeline,
     start: 'top 76%',
@@ -748,10 +753,13 @@ export default function App() {
   }, [isDark]);
 
   useEffect(() => {
-    if (!hasSeenLightSide || isDark || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
-    gsap.registerPlugin(ScrollTrigger);
+    if (!hasSeenLightSide || isDark) return undefined;
     const root = document.querySelector('.portfolio-side-cache:not([hidden])');
     if (!root) return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return setupSnakeTimeline(root, true);
+    }
+    gsap.registerPlugin(ScrollTrigger);
     let snakeCleanup = () => {};
     const ctx = gsap.context(() => {
       snakeCleanup = setupSnakeTimeline(root);

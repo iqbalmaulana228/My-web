@@ -381,6 +381,7 @@ function Experience() {
         </div>
         <div className="timeline-scroll" aria-label="Timeline pengalaman profesional">
           <div className="timeline">
+            <div className="timeline-scroll-rail" aria-hidden="true"><span className="timeline-scroll-fill" /></div>
             {experiences.slice().reverse().map((item, index) => (
               <article className={`timeline-item${item.current ? ' current' : ''}`} key={item.role}>
                 <div className="timeline-marker"><span>{String(index + 1).padStart(2, '0')}</span></div>

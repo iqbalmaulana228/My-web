@@ -420,7 +420,6 @@ function Skills({ isDark }) {
             </div>
             <div className="focus-detail focus-detail-simple" aria-live="polite"><span>SELECTED AREA</span><strong>{focus.label}</strong><p>{focus.detail}</p></div>
           </article>
-article>
         </div>
         <div className="capability-grid">
           {capabilities.map(([title, description], index) => (

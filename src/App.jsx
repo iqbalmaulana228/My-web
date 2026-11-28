@@ -1,4 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lanyard from './components/Lanyard.jsx';
 const SlingThemeButton = lazy(() => import('./components/SlingThemeButton.jsx'));
 const DarkSidePortfolio = lazy(() => import('./components/DarkSidePortfolio.jsx'));
@@ -651,6 +653,19 @@ export default function App() {
       // Theme still works for the current session when storage is unavailable.
     }
   }, [isDark]);
+
+  useEffect(() => {
+    if (!hasSeenLightSide || isDark || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    gsap.registerPlugin(ScrollTrigger);
+    const root = document.querySelector('.portfolio-side-cache:not([hidden])');
+    if (!root) return undefined;
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray('.section-heading h2, .about-lead, .flowing-explore-heading h2', root).forEach(el => gsap.fromTo(el,{y:24,opacity:0},{y:0,opacity:1,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}}));
+      gsap.utils.toArray('.timeline-item, .capability-card-shell, .folder-card, .education-card', root).forEach((el,i)=>gsap.fromTo(el,{y:30,opacity:0,scale:.985},{y:0,opacity:1,scale:1,duration:.65,delay:(i%4)*.055,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 90%',once:true}}));
+      gsap.utils.toArray('.button, .nav-contact',root).forEach(el=>{const move=e=>{const r=el.getBoundingClientRect();gsap.to(el,{x:(e.clientX-r.left-r.width/2)*.12,y:(e.clientY-r.top-r.height/2)*.12,duration:.25,ease:'power2.out'});};const reset=()=>gsap.to(el,{x:0,y:0,duration:.5,ease:'elastic.out(1,.45)'});el.addEventListener('mousemove',move);el.addEventListener('mouseleave',reset);el._magneticCleanup=()=>{el.removeEventListener('mousemove',move);el.removeEventListener('mouseleave',reset);};});
+    },root);
+    return ()=>{ctx.revert();root.querySelectorAll('.button,.nav-contact').forEach(el=>el._magneticCleanup?.());};
+  }, [hasSeenLightSide, isDark]);
 
   useEffect(() => {
     if (!hasSeenLightSide) return undefined;

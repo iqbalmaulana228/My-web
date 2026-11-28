@@ -513,30 +513,19 @@ export default function DarkSidePortfolio({active = true}) {
             )}
             <div className="ds-build-prompt"><b>~/build.log $</b><span>{typing.area === 'journey' ? typing.text : ''}</span>{typing.area === 'journey' && typing.text && <i className="ds-caret"/>}</div>
             {active && (
-              <Suspense fallback={null}>
-                <div className="ds-scroll-velocity-shell" aria-label="Build philosophy ticker">
-                  <small>DEVELOPMENT LOOP / CONTINUOUS</small>
-                  <ScrollVelocity
-                    texts={['BUILD / TEST / ITERATE', 'DOCUMENTS / AUTOMATION / AI']}
-                    velocity={34}
-                    damping={48}
-                    stiffness={360}
-                    numCopies={4}
-                    pauseOnHover
-                    fadeEdges
-                    skewWithVelocity={0.35}
-                    scaleWithVelocity={0.035}
-                    outlineAlternate
-                    gap={40}
-                    fontSize="clamp(13px, 1.7vw, 21px)"
-                    fontWeight={700}
-                    color="#86c9fc"
-                    className="ds-velocity-text"
-                    parallaxClassName="ds-velocity-parallax"
-                    scrollerClassName="ds-velocity-scroller"
-                  />
+              <div className="ds-scroll-velocity-shell" aria-label="Build philosophy ticker">
+                <small>DEVELOPMENT LOOP / CONTINUOUS</small>
+                <div className="ds-marquee-row">
+                  <div className="ds-marquee-track ds-marquee-primary">
+                    {[0,1].map(copy => <span className="ds-marquee-copy" aria-hidden={copy===1?"true":undefined} key={copy}>BUILD / TEST / ITERATE&nbsp;&nbsp;&nbsp; BUILD / TEST / ITERATE&nbsp;&nbsp;&nbsp; BUILD / TEST / ITERATE&nbsp;&nbsp;&nbsp;</span>)}
+                  </div>
                 </div>
-              </Suspense>
+                <div className="ds-marquee-row ds-marquee-outline-row">
+                  <div className="ds-marquee-track ds-marquee-secondary">
+                    {[0,1].map(copy => <span className="ds-marquee-copy ds-marquee-outline" aria-hidden={copy===1?"true":undefined} key={copy}>DOCUMENTS / AUTOMATION / AI&nbsp;&nbsp;&nbsp; DOCUMENTS / AUTOMATION / AI&nbsp;&nbsp;&nbsp; DOCUMENTS / AUTOMATION / AI&nbsp;&nbsp;&nbsp;</span>)}
+                  </div>
+                </div>
+              </div>
             )}
             <div className="ds-principle"><b>{'<>'}</b><div><strong>BUILD • LEARN • ITERATE</strong><p>Start with a problem. Build a working version. Test it. Improve the next one.</p></div><small>EOF</small></div>
           </section>

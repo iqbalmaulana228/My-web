@@ -663,7 +663,7 @@ export default function App() {
     const ctx = gsap.context(() => {
       const timeline = root.querySelector('.timeline');
       const railFill = root.querySelector('.timeline-scroll-fill');
-      if (timeline && railFill) gsap.fromTo(railFill,{scaleY:0},{scaleY:1,ease:'none',scrollTrigger:{trigger:timeline,start:'top 72%',end:'bottom 70%',scrub:0.35}});
+      if (timeline && railFill) gsap.fromTo(railFill,{scaleX:0},{scaleX:1,ease:'none',scrollTrigger:{trigger:timeline,start:'top 78%',end:'bottom 62%',scrub:0.35}});
       root.querySelectorAll('.timeline-item').forEach(item=>ScrollTrigger.create({trigger:item,start:'top 62%',end:'bottom 62%',toggleClass:{targets:item,className:'is-active'}}));
       gsap.utils.toArray('.section-heading h2, .about-lead, .flowing-explore-heading h2', root).forEach(el => gsap.fromTo(el,{y:24,opacity:0},{y:0,opacity:1,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}}));
       gsap.utils.toArray('.timeline-item, .capability-card-shell, .folder-card, .education-card', root).forEach((el,i)=>gsap.fromTo(el,{y:30,opacity:0,scale:.985},{y:0,opacity:1,scale:1,duration:.65,delay:(i%4)*.055,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 90%',once:true}}));

@@ -16,6 +16,7 @@ const DecryptedText = lazy(() => import('./reactbits/DecryptedText.jsx'));
 const GlareHover = lazy(() => import('./reactbits/GlareHover.jsx'));
 const LogoLoop = lazy(() => import('./reactbits/LogoLoop.jsx'));
 const ScrollVelocity = lazy(() => import('./reactbits/ScrollVelocity.jsx'));
+const HeroOrb = lazy(() => import('./HeroOrb.jsx'));
 const AnimatedContent = lazy(() => import('./reactbits/AnimatedContent.jsx'));
 
 const GITHUB = 'https://github.com/iqbalmaulana228';
@@ -411,6 +412,7 @@ export default function DarkSidePortfolio({active = true}) {
               </div>
             </div>
             <div className="ds-hero-visual">
+              <div className="ds-hero-orb-wrap"><Suspense fallback={<div className="ds-orb-fallback"/>}><HeroOrb active={active}/></Suspense><div className="ds-orb-caption"><b>CORE / 01</b><span>IDEAS → SYSTEMS → TOOLS</span></div></div>
               <div className="ds-pixel-orbit"><i/><i/><i/></div><div className="ds-code-tag">PROFILE OBJECT // TS</div>
               {active ? (
                 <Suspense fallback={<CodeWindow typing={typing} profileProgress={profileProgress}/>}>

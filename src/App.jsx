@@ -168,16 +168,19 @@ function Header({ isDark }) {
 
   useEffect(() => {
     let frame = 0;
+    const panels = Array.from(document.querySelectorAll('.portfolio-side-cache:not([hidden]) .portfolio-deck-panel'));
     const updateActive = () => {
       if (frame) return;
       frame = window.requestAnimationFrame(() => {
-        const marker = window.scrollY + Math.min(window.innerHeight * 0.32, 240);
-        let nextIndex = 0;
-        nav.forEach((item, index) => {
-          const section = document.querySelector(item.href);
-          if (section && section.getBoundingClientRect().top + window.scrollY <= marker) nextIndex = index;
-        });
-        setActiveIndex(current => current === nextIndex ? current : nextIndex);
+        const headerHeight = document.querySelector('.site-header')?.getBoundingClientRect().height || 82;
+        let activeId = 'top';
+        for (const panel of panels) {
+          if (panel.getBoundingClientRect().top > headerHeight + 2) break;
+          const section = panel.querySelector('section[id]');
+          if (section?.id) activeId = section.id;
+        }
+        const nextIndex = nav.findIndex(item => item.href === `#${activeId}`);
+        if (nextIndex >= 0) setActiveIndex(current => current === nextIndex ? current : nextIndex);
         frame = 0;
       });
     };
@@ -710,8 +713,10 @@ function setupSnakeTimeline(root, reducedMotion = false) {
     return () => {};
   }
 
+  const scroller = timeline.closest('.portfolio-deck-surface');
   const trigger = ScrollTrigger.create({
     trigger: timeline,
+    scroller: scroller || window,
     start: 'top 76%',
     end: 'bottom 66%',
     scrub: 0.5,
@@ -730,6 +735,36 @@ function setupSnakeTimeline(root, reducedMotion = false) {
     trigger.kill();
     resizeObserver?.disconnect();
   };
+}
+
+function setupCardDeckMotion(root) {
+  const panels = Array.from(root.querySelectorAll('.portfolio-deck-panel'));
+  panels.forEach((panel, index) => {
+    if (index === 0) return;
+    const incoming = panel.querySelector('.portfolio-deck-surface');
+    const previous = panels[index - 1].querySelector('.portfolio-deck-surface');
+    if (!incoming || !previous) return;
+
+    const transition = {
+      trigger: panel,
+      start: 'top bottom',
+      end: 'top top',
+      scrub: 0.7,
+    };
+    gsap.fromTo(incoming,
+      { y: 42, scale: 0.986, rotationX: -2 },
+      { y: 0, scale: 1, rotationX: 0, ease: 'none', scrollTrigger: transition }
+    );
+    gsap.to(previous, {
+      y: -22,
+      scale: 0.952,
+      rotationX: 3.5,
+      opacity: 0.84,
+      filter: 'brightness(0.9)',
+      ease: 'none',
+      scrollTrigger: transition,
+    });
+  });
 }
 
 export default function App() {
@@ -763,17 +798,19 @@ export default function App() {
     let snakeCleanup = () => {};
     const ctx = gsap.context(() => {
       snakeCleanup = setupSnakeTimeline(root);
+      setupCardDeckMotion(root);
       root.querySelectorAll('.timeline-item').forEach(item => ScrollTrigger.create({
         trigger: item,
         start: 'top 52%',
         end: 'bottom 52%',
+        scroller: item.closest('.portfolio-deck-surface') || window,
         toggleClass: { targets: item, className: 'is-active' },
         onEnter: () => item.classList.add('is-passed'),
         onEnterBack: () => item.classList.remove('is-passed'),
         onLeaveBack: () => item.classList.remove('is-passed'),
       }));
-      gsap.utils.toArray('.section-heading h2, .about-lead, .flowing-explore-heading h2', root).forEach(el => gsap.fromTo(el,{y:24,opacity:0},{y:0,opacity:1,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}}));
-      gsap.utils.toArray('.capability-card-shell, .folder-card, .education-card', root).forEach((el,i)=>gsap.fromTo(el,{y:30,opacity:0,scale:.985},{y:0,opacity:1,scale:1,duration:.65,delay:(i%4)*.055,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 90%',once:true}}));
+      gsap.utils.toArray('.section-heading h2, .about-lead, .flowing-explore-heading h2', root).forEach(el => gsap.fromTo(el,{y:24,opacity:0},{y:0,opacity:1,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,scroller:el.closest('.portfolio-deck-surface') || window,start:'top 88%',once:true}}));
+      gsap.utils.toArray('.capability-card-shell, .folder-card, .education-card', root).forEach((el,i)=>gsap.fromTo(el,{y:30,opacity:0,scale:.985},{y:0,opacity:1,scale:1,duration:.65,delay:(i%4)*.055,ease:'power2.out',scrollTrigger:{trigger:el,scroller:el.closest('.portfolio-deck-surface') || window,start:'top 90%',once:true}}));
       gsap.utils.toArray('.button, .nav-contact',root).forEach(el=>{const move=e=>{const r=el.getBoundingClientRect();gsap.to(el,{x:(e.clientX-r.left-r.width/2)*.12,y:(e.clientY-r.top-r.height/2)*.12,duration:.25,ease:'power2.out'});};const reset=()=>gsap.to(el,{x:0,y:0,duration:.5,ease:'elastic.out(1,.45)'});el.addEventListener('mousemove',move);el.addEventListener('mouseleave',reset);el._magneticCleanup=()=>{el.removeEventListener('mousemove',move);el.removeEventListener('mouseleave',reset);};});
     },root);
     return ()=>{snakeCleanup();ctx.revert();root.querySelectorAll('.button,.nav-contact').forEach(el=>el._magneticCleanup?.());};
@@ -860,16 +897,48 @@ export default function App() {
       {hasSeenLightSide && (
         <div className="portfolio-side-cache" hidden={isDark}>
           <Header isDark={false} />
-          <main>
-            <Hero />
-            <QuickFacts />
-            <About />
-            <Experience />
-            <Skills isDark={false} />
-            <WorkFiles />
-            <Education />
-            <ExploreMenu isDark={false} />
-            <Contact />
+          <main className="portfolio-card-deck">
+            <div className="portfolio-deck-panel" data-deck-panel style={{ zIndex: 1 }}>
+              <div className="portfolio-deck-surface" tabIndex={0} aria-label="Beranda portfolio">
+                <Hero />
+                <QuickFacts />
+              </div>
+            </div>
+            <div className="portfolio-deck-panel" data-deck-panel style={{ zIndex: 2 }}>
+              <div className="portfolio-deck-surface" tabIndex={0} aria-label="Tentang">
+                <About />
+              </div>
+            </div>
+            <div className="portfolio-deck-panel" data-deck-panel style={{ zIndex: 3 }}>
+              <div className="portfolio-deck-surface" tabIndex={0} aria-label="Pengalaman">
+                <Experience />
+              </div>
+            </div>
+            <div className="portfolio-deck-panel" data-deck-panel style={{ zIndex: 4 }}>
+              <div className="portfolio-deck-surface" tabIndex={0} aria-label="Keahlian">
+                <Skills isDark={false} />
+              </div>
+            </div>
+            <div className="portfolio-deck-panel" data-deck-panel style={{ zIndex: 5 }}>
+              <div className="portfolio-deck-surface" tabIndex={0} aria-label="Koleksi pekerjaan">
+                <WorkFiles />
+              </div>
+            </div>
+            <div className="portfolio-deck-panel" data-deck-panel style={{ zIndex: 6 }}>
+              <div className="portfolio-deck-surface" tabIndex={0} aria-label="Pendidikan">
+                <Education />
+              </div>
+            </div>
+            <div className="portfolio-deck-panel" data-deck-panel style={{ zIndex: 7 }}>
+              <div className="portfolio-deck-surface" tabIndex={0} aria-label="Eksplorasi">
+                <ExploreMenu isDark={false} />
+              </div>
+            </div>
+            <div className="portfolio-deck-panel" data-deck-panel style={{ zIndex: 8 }}>
+              <div className="portfolio-deck-surface" tabIndex={0} aria-label="Kontak">
+                <Contact />
+              </div>
+            </div>
           </main>
           <Footer />
         </div>

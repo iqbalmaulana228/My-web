@@ -381,16 +381,31 @@ function Experience() {
         </div>
         <div className="timeline-scroll" aria-label="Timeline pengalaman profesional">
           <div className="timeline">
-            <div className="timeline-scroll-rail" aria-hidden="true"><span className="timeline-scroll-fill" /></div>
+            <svg className="timeline-snake" aria-hidden="true" focusable="false">
+              <defs>
+                <linearGradient id="timelineSnakeGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#140a9a" />
+                  <stop offset="52%" stopColor="#2563eb" />
+                  <stop offset="100%" stopColor="#ffc72c" />
+                </linearGradient>
+              </defs>
+              <path className="timeline-snake-track" fill="none" />
+              <path className="timeline-snake-progress" fill="none" />
+            </svg>
             {experiences.slice().reverse().map((item, index) => (
-              <article className={`timeline-item${item.current ? ' current' : ''}`} key={item.role}>
+              <article
+                className={`timeline-item timeline-item--${index % 2 === 0 ? 'left' : 'right'}${item.current ? ' current' : ''}`}
+                key={item.role}
+              >
                 <div className="timeline-marker"><span>{String(index + 1).padStart(2, '0')}</span></div>
-                <div className="timeline-period">{item.period}</div>
-                <div className="timeline-detail">
-                  <div className="role-heading"><h3>{item.role}</h3>{item.current && <span className="current-badge">CURRENT</span>}</div>
-                  <p className="timeline-company">{item.company}</p>
-                  <span className="timeline-type">{item.type}</span>
-                  <p className="timeline-description">{item.detail}</p>
+                <div className="timeline-content">
+                  <div className="timeline-period">{item.period}</div>
+                  <div className="timeline-detail">
+                    <div className="role-heading"><h3>{item.role}</h3>{item.current && <span className="current-badge">CURRENT</span>}</div>
+                    <p className="timeline-company">{item.company}</p>
+                    <span className="timeline-type">{item.type}</span>
+                    <p className="timeline-description">{item.detail}</p>
+                  </div>
                 </div>
               </article>
             ))}
@@ -635,6 +650,83 @@ function Footer() {
   return <footer className="site-footer"><div className="section-inner"><a className="footer-brand" href="#top">IM<span>.</span></a><p>© {new Date().getFullYear()} Muhammad Iqbal Maulana. Built with purpose.</p><a href={profileUrl} target="_blank" rel="noreferrer">LinkedIn <Icon name="external" size={13} /></a></div></footer>;
 }
 
+function setupSnakeTimeline(root) {
+  const timeline = root.querySelector('.timeline');
+  const svg = timeline?.querySelector('.timeline-snake');
+  const track = timeline?.querySelector('.timeline-snake-track');
+  const progress = timeline?.querySelector('.timeline-snake-progress');
+  const markers = Array.from(timeline?.querySelectorAll('.timeline-marker') || []);
+  if (!timeline || !svg || !track || !progress || markers.length < 2) return () => {};
+
+  let pathLength = 0;
+  const drawPath = () => {
+    const width = timeline.clientWidth;
+    const height = timeline.offsetHeight;
+    if (!width || !height) return 0;
+
+    const timelineRect = timeline.getBoundingClientRect();
+    const points = markers.map(marker => {
+      const rect = marker.getBoundingClientRect();
+      return {
+        x: rect.left - timelineRect.left + rect.width / 2,
+        y: rect.top - timelineRect.top + rect.height / 2,
+      };
+    });
+    const leftSpace = Math.min(...points.map(point => point.x));
+    const rightSpace = Math.min(...points.map(point => width - point.x));
+    const preferredBend = Number.parseFloat(getComputedStyle(timeline).getPropertyValue('--snake-amplitude'));
+    const amplitude = Math.max(8, Math.min(
+      Number.isFinite(preferredBend) ? preferredBend : width * 0.08,
+      leftSpace - 12,
+      rightSpace - 12,
+    ));
+
+    let path = `M ${points[0].x} ${points[0].y}`;
+    for (let index = 0; index < points.length - 1; index += 1) {
+      const from = points[index];
+      const to = points[index + 1];
+      const distanceY = to.y - from.y;
+      const direction = index % 2 === 0 ? -1 : 1;
+      const bend = direction * amplitude;
+      path += ` C ${from.x + bend} ${from.y + distanceY * 0.28}, ${to.x + bend} ${from.y + distanceY * 0.72}, ${to.x} ${to.y}`;
+    }
+
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    track.setAttribute('d', path);
+    progress.setAttribute('d', path);
+    pathLength = progress.getTotalLength();
+    progress.style.strokeDasharray = `${pathLength}`;
+    progress.style.strokeDashoffset = `${pathLength}`;
+    return pathLength;
+  };
+
+  const applyProgress = value => {
+    if (pathLength) progress.style.strokeDashoffset = `${pathLength * (1 - value)}`;
+  };
+
+  drawPath();
+  const trigger = ScrollTrigger.create({
+    trigger: timeline,
+    start: 'top 76%',
+    end: 'bottom 66%',
+    scrub: 0.5,
+    onUpdate: self => applyProgress(self.progress),
+    onRefresh: self => {
+      drawPath();
+      applyProgress(self.progress);
+    },
+  });
+  const resizeObserver = typeof ResizeObserver === 'undefined'
+    ? null
+    : new ResizeObserver(() => ScrollTrigger.refresh());
+  resizeObserver?.observe(timeline);
+
+  return () => {
+    trigger.kill();
+    resizeObserver?.disconnect();
+  };
+}
+
 export default function App() {
   const [isDark, setIsDark] = useState(readSavedTheme);
   const [hasSeenLightSide, setHasSeenLightSide] = useState(() => !readSavedTheme());
@@ -660,16 +752,23 @@ export default function App() {
     gsap.registerPlugin(ScrollTrigger);
     const root = document.querySelector('.portfolio-side-cache:not([hidden])');
     if (!root) return undefined;
+    let snakeCleanup = () => {};
     const ctx = gsap.context(() => {
-      const timeline = root.querySelector('.timeline');
-      const railFill = root.querySelector('.timeline-scroll-fill');
-      if (timeline && railFill) gsap.fromTo(railFill,{scaleX:0},{scaleX:1,ease:'none',scrollTrigger:{trigger:timeline,start:'top 78%',end:'bottom 62%',scrub:0.35}});
-      root.querySelectorAll('.timeline-item').forEach(item=>ScrollTrigger.create({trigger:item,start:'top 62%',end:'bottom 62%',toggleClass:{targets:item,className:'is-active'}}));
+      snakeCleanup = setupSnakeTimeline(root);
+      root.querySelectorAll('.timeline-item').forEach(item => ScrollTrigger.create({
+        trigger: item,
+        start: 'top 52%',
+        end: 'bottom 52%',
+        toggleClass: { targets: item, className: 'is-active' },
+        onEnter: () => item.classList.add('is-passed'),
+        onEnterBack: () => item.classList.remove('is-passed'),
+        onLeaveBack: () => item.classList.remove('is-passed'),
+      }));
       gsap.utils.toArray('.section-heading h2, .about-lead, .flowing-explore-heading h2', root).forEach(el => gsap.fromTo(el,{y:24,opacity:0},{y:0,opacity:1,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}}));
-      gsap.utils.toArray('.timeline-item, .capability-card-shell, .folder-card, .education-card', root).forEach((el,i)=>gsap.fromTo(el,{y:30,opacity:0,scale:.985},{y:0,opacity:1,scale:1,duration:.65,delay:(i%4)*.055,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 90%',once:true}}));
+      gsap.utils.toArray('.capability-card-shell, .folder-card, .education-card', root).forEach((el,i)=>gsap.fromTo(el,{y:30,opacity:0,scale:.985},{y:0,opacity:1,scale:1,duration:.65,delay:(i%4)*.055,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 90%',once:true}}));
       gsap.utils.toArray('.button, .nav-contact',root).forEach(el=>{const move=e=>{const r=el.getBoundingClientRect();gsap.to(el,{x:(e.clientX-r.left-r.width/2)*.12,y:(e.clientY-r.top-r.height/2)*.12,duration:.25,ease:'power2.out'});};const reset=()=>gsap.to(el,{x:0,y:0,duration:.5,ease:'elastic.out(1,.45)'});el.addEventListener('mousemove',move);el.addEventListener('mouseleave',reset);el._magneticCleanup=()=>{el.removeEventListener('mousemove',move);el.removeEventListener('mouseleave',reset);};});
     },root);
-    return ()=>{ctx.revert();root.querySelectorAll('.button,.nav-contact').forEach(el=>el._magneticCleanup?.());};
+    return ()=>{snakeCleanup();ctx.revert();root.querySelectorAll('.button,.nav-contact').forEach(el=>el._magneticCleanup?.());};
   }, [hasSeenLightSide, isDark]);
 
   useEffect(() => {
@@ -703,7 +802,7 @@ export default function App() {
       '.section-heading',
       '.about-content',
       '.about-flip-wrap',
-      '.timeline-item',
+      '.timeline-content',
       '.skill-carousel-panel',
       '.skill-wheel-panel',
       '.capability-card-shell',

@@ -113,7 +113,16 @@ function VelocityText({
   const drag = useRef({ active: false, pointerId: -1, lastX: 0, lastTime: 0, velocity: 0, travel: 0 });
 
   useAnimationFrame((t, delta) => {
-    if (reduceMotion) return;
+    // Keep the ticker moving even when the OS requests reduced motion.
+    // This component is a deliberately subtle, low-intensity marquee; reduced-motion
+    // users get a slower baseline movement without scroll-reactive distortion.
+    if (reduceMotion) {
+      const seconds = Math.min(delta, 64) / 1000;
+      const targetPace = pauseOnHover && hoveredRef.current ? 0 : 0.35;
+      pace.current += (targetPace - pace.current) * (1 - Math.exp(-delta / 220));
+      baseX.set(baseX.get() + directionFactor.current * baseVelocity * seconds * pace.current);
+      return;
+    }
 
     const grab = drag.current;
     const seconds = Math.min(delta, 64) / 1000;

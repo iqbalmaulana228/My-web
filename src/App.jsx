@@ -661,6 +661,10 @@ export default function App() {
     const root = document.querySelector('.portfolio-side-cache:not([hidden])');
     if (!root) return undefined;
     const ctx = gsap.context(() => {
+      const timeline = root.querySelector('.timeline');
+      const railFill = root.querySelector('.timeline-scroll-fill');
+      if (timeline && railFill) gsap.fromTo(railFill,{scaleY:0},{scaleY:1,ease:'none',scrollTrigger:{trigger:timeline,start:'top 72%',end:'bottom 70%',scrub:0.35}});
+      root.querySelectorAll('.timeline-item').forEach(item=>ScrollTrigger.create({trigger:item,start:'top 62%',end:'bottom 62%',toggleClass:{targets:item,className:'is-active'}}));
       gsap.utils.toArray('.section-heading h2, .about-lead, .flowing-explore-heading h2', root).forEach(el => gsap.fromTo(el,{y:24,opacity:0},{y:0,opacity:1,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 88%',once:true}}));
       gsap.utils.toArray('.timeline-item, .capability-card-shell, .folder-card, .education-card', root).forEach((el,i)=>gsap.fromTo(el,{y:30,opacity:0,scale:.985},{y:0,opacity:1,scale:1,duration:.65,delay:(i%4)*.055,ease:'power2.out',scrollTrigger:{trigger:el,start:'top 90%',once:true}}));
       gsap.utils.toArray('.button, .nav-contact',root).forEach(el=>{const move=e=>{const r=el.getBoundingClientRect();gsap.to(el,{x:(e.clientX-r.left-r.width/2)*.12,y:(e.clientY-r.top-r.height/2)*.12,duration:.25,ease:'power2.out'});};const reset=()=>gsap.to(el,{x:0,y:0,duration:.5,ease:'elastic.out(1,.45)'});el.addEventListener('mousemove',move);el.addEventListener('mouseleave',reset);el._magneticCleanup=()=>{el.removeEventListener('mousemove',move);el.removeEventListener('mouseleave',reset);};});

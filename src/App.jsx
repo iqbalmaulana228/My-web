@@ -6,7 +6,6 @@ const DarkSidePortfolio = lazy(() => import('./components/DarkSidePortfolio.jsx'
 const CircularCarousel = lazy(() => import('./components/reactbits/CircularCarousel.jsx'));
 const FlipCard = lazy(() => import('./components/reactbits/FlipCard.jsx'));
 const Folder = lazy(() => import('./components/reactbits/Folder.jsx'));
-const OptionWheel = lazy(() => import('./components/reactbits/OptionWheel.jsx'));
 const FlowingMenu = lazy(() => import('./components/reactbits/FlowingMenu.jsx'));
 const GooeyNav = lazy(() => import('./components/reactbits/GooeyNav.jsx'));
 const TextLoop = lazy(() => import('./components/reactbits/TextLoop.jsx'));
@@ -413,16 +412,15 @@ function Skills({ isDark }) {
               <CircularCarousel items={skillArtwork} preset="cylinder" intro="assemble" cardWidth={205} aspectRatio={0.82} gap={18} curve={0.75} tilt={-7} autoplay="drift" speed={9} momentum={0.55} draggable snap pauseOnHover focusOnClick parallax={0.2} stretch={0.32} depthFade={0.38} fadeColor="#ffffff" innerShade={0.22} cornerRadius={16} captions style={{ height: '445px' }} />
             </Suspense></Deferred>
           </article>
-          <article className="skill-wheel-panel">
-            <div className="interaction-panel-heading"><div><span>02 / FOCUS SELECTOR</span><h3>Explore focus areas.</h3></div></div>
-            <p className="wheel-intro">Putar pilihan untuk melihat konteks kemampuan yang digunakan dalam pekerjaan dan proses belajar.</p>
-            <div className="option-wheel-stage">
-              <Deferred minHeight={340}><Suspense fallback={<div className="deferred-placeholder" style={{ minHeight: 340 }} />}>
-                <OptionWheel items={focusOptions.map(item => item.label)} defaultSelected={2} onChange={index => setFocused(index)} textColor={isDark ? '#aab8d0' : '#94a3b8'} activeColor={isDark ? '#b8b2ff' : '#140a9a'} side="left" fontSize={1.24} spacing={1.65} curve={1.12} tilt={9} blur={1.2} fade={0.3} minOpacity={0.1} smoothing={190} inset={22} loop draggable className="portfolio-option-wheel" />
-              </Suspense></Deferred>
+          <article className="skill-wheel-panel focus-panel-simple">
+            <div className="interaction-panel-heading"><div><span>02 / WORKING FOCUS</span><h3>Areas of expertise.</h3></div></div>
+            <p className="wheel-intro">Pilih area untuk melihat contoh konteks pekerjaan dan kemampuan yang relevan.</p>
+            <div className="focus-choice-grid" role="group" aria-label="Pilih area fokus">
+              {focusOptions.map((item,index)=><button type="button" key={item.label} className={'focus-choice'+(focused===index?' is-selected':'')} onClick={()=>setFocused(index)} aria-pressed={focused===index}><span className="focus-choice-number">0{index+1}</span><strong>{item.label}</strong><span className="focus-choice-arrow" aria-hidden="true">↗</span></button>)}
             </div>
-            <div className="focus-detail" aria-live="polite"><span>SELECTED FOCUS</span><strong>{focus.label}</strong><p>{focus.detail}</p></div>
+            <div className="focus-detail focus-detail-simple" aria-live="polite"><span>SELECTED AREA</span><strong>{focus.label}</strong><p>{focus.detail}</p></div>
           </article>
+article>
         </div>
         <div className="capability-grid">
           {capabilities.map(([title, description], index) => (

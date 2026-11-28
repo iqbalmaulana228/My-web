@@ -1175,3 +1175,15 @@ html[data-theme='dark'] .button-quiet:hover {
   background: #202b45;
 }
 .sling-theme-button[data-pulling='true'] { transition: none; }
+
+/* Accessible click-first focus selector */
+.focus-panel-simple{display:flex;flex-direction:column;}
+.focus-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:18px 0 15px;}
+.focus-choice{position:relative;display:flex;min-height:76px;flex-direction:column;align-items:flex-start;justify-content:center;gap:7px;padding:12px 14px;border:1px solid #dbe3ee;background:#fff;color:#334155;text-align:left;cursor:pointer;transition:background .18s,border-color .18s,transform .18s,box-shadow .18s;}
+.focus-choice:hover{border-color:#140a9a;transform:translateY(-2px);box-shadow:3px 3px 0 #140a9a15;}.focus-choice:focus-visible{outline:3px solid #86c9fc;outline-offset:2px;}
+.focus-choice.is-selected{border-color:#140a9a;background:#140a9a;color:#fff;box-shadow:3px 3px 0 #ffc72c;}.focus-choice-number{font:800 8px Manrope,sans-serif;letter-spacing:1.2px;color:#94a3b8;}.focus-choice.is-selected .focus-choice-number{color:#ffc72c;}
+.focus-choice strong{font:800 11px Manrope,sans-serif;}.focus-choice-arrow{position:absolute;right:11px;top:11px;color:#94a3b8;font-size:12px;}.focus-choice.is-selected .focus-choice-arrow{color:#86c9fc;}
+.focus-detail-simple{min-height:105px;margin-top:auto;}
+[data-theme="dark"] .focus-choice,.dark-theme .focus-choice{background:#111b2a;border-color:#334155;color:#dbeafe;}
+[data-theme="dark"] .focus-choice.is-selected,.dark-theme .focus-choice.is-selected{background:#140a9a;border-color:#86c9fc;color:white;}
+@media(max-width:420px){.focus-choice-grid{grid-template-columns:1fr;}.focus-choice{min-height:60px;}}

@@ -9,6 +9,11 @@ A personal portfolio that brings together my professional journey and developer 
 [![Live Portfolio](https://img.shields.io/badge/LIVE_PORTFOLIO-Open-140A9A?style=for-the-badge&logo=vercel&logoColor=white)](https://iqbal-professional-portfolio.vercel.app)
 [![GitHub](https://img.shields.io/badge/GITHUB-iqbalmaulana228-181717?style=for-the-badge&logo=github)](https://github.com/iqbalmaulana228)
 [![LinkedIn](https://img.shields.io/badge/LINKEDIN-Connect-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/muhammad-iqbal-maulana228)
+<br/>
+
+<img width="1805" height="927" alt="image" src="https://github.com/user-attachments/assets/7d379bc0-8868-4894-be8e-dd569c960d89" />
+![Uploading image.png…]()
+
 
 <br/>
 
